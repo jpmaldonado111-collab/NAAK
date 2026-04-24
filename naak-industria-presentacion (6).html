@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAAK — Entendimiento de la Industria · Crema + Marino</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ── */
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: #EDE8DC;
+  font-family: 'DM Sans', sans-serif;
+  color: #F5F2E0;
+  overflow-x: hidden;
+}
+
+/* ── SLIDE SYSTEM ── */
+.slide {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 100px;
+  position: relative;
+  overflow: hidden;
+  page-break-after: always;
+}
+
+/* ── BACKGROUNDS ── */
+.bg-black  { background: #0B1F3A; }
+.bg-yellow { background: #1B8FFF; }
+.bg-white  { background: #FDFAF5; color: #0B1F3A; }
+.bg-dark   { background: #162D52; }
+.bg-navy { background: #0B1F3A; }
+.bg-ink    { background: #0D1929; }
+
+/* grain */
+.slide::before {
+  content:''; position:absolute; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:0;
+}
+.slide > * { position: relative; z-index: 1; }
+
+/* ── NAV DOTS ── */
+.nav {
+  position: fixed; right: 32px; top: 50%;
+  transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 10px;
+  z-index: 100;
+}
+.nav a {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: block; transition: all 0.2s;
+  text-decoration: none;
+}
+.nav a:hover, .nav a.active { background: #C8902A; transform: scale(1.4); }
+
+/* ── SLIDE NUMBER ── */
+.slide-num {
+  position: absolute; bottom: 40px; right: 100px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; letter-spacing: 3px;
+  opacity: 0.25; z-index: 1;
+}
+
+/* ── SECTION LABEL ── */
+.section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 5px; text-transform: uppercase;
+  color: #C8902A; margin-bottom: 16px; opacity: 0.8;
+}
+.bg-white .section-label { color: #9A7800; }
+.bg-yellow .section-label { color: rgba(14,12,10,0.5); }
+
+/* ── TYPOGRAPHY ── */
+.display {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(52px, 7vw, 88px);
+  font-weight: 800; line-height: 0.92;
+  letter-spacing: -2px;
+}
+.display.yellow { color: #C8902A; }
+.display.dark { color: #0B1F3A; }
+
+.h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(36px, 4.5vw, 58px);
+  font-weight: 700; line-height: 1; letter-spacing: -1px;
+}
+.h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(22px, 2.5vw, 32px);
+  font-weight: 700; letter-spacing: 0px;
+}
+.h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px; font-weight: 700; letter-spacing: 0.5px;
+}
+.body { font-size: 15px; font-weight: 300; line-height: 1.7; }
+.caption {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  opacity: 0.45;
+}
+
+/* ── LAYOUT HELPERS ── */
+.row { display: flex; gap: 48px; align-items: flex-start; }
+.col { flex: 1; }
+.col-2 { flex: 2; }
+.col-3 { flex: 3; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 24px; }
+.mt8 { margin-top: 8px; }
+.mt16 { margin-top: 16px; }
+.mt24 { margin-top: 24px; }
+.mt32 { margin-top: 32px; }
+.mt48 { margin-top: 48px; }
+.mt64 { margin-top: 64px; }
+
+/* ── CARDS ── */
+.card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 4px;
+  padding: 28px 24px;
+}
+.card-white {
+  background: #FFFFFF;
+  border-radius: 4px;
+  padding: 28px 24px;
+  color: #0B1F3A;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+.card-yellow {
+  background: #1B8FFF;
+  border-radius: 4px;
+  padding: 28px 24px;
+  color: #0B1F3A;
+}
+.card-ink {
+  background: #0B1F3A;
+  border-radius: 4px;
+  padding: 28px 24px;
+  color: #F5F2E0;
+}
+
+/* ── STAT CALLOUT ── */
+.stat-big {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(36px, 4.5vw, 56px);
+  font-weight: 800; line-height: 1;
+  color: #C8902A;
+}
+.stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(245,242,224,0.45); margin-top: 6px;
+}
+.bg-white .stat-big { color: #D4A800; }
+.bg-white .stat-label { color: rgba(14,12,10,0.4); }
+.bg-yellow .stat-big { color: #0B1F3A; font-size: 56px; }
+.bg-yellow .stat-label { color: rgba(14,12,10,0.5); }
+
+/* ── DIVIDER ── */
+.hdivider {
+  width: 100%; height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 32px 0;
+}
+.bg-white .hdivider { background: rgba(14,12,10,0.1); }
+.bg-yellow .hdivider { background: rgba(14,12,10,0.15); }
+
+/* ── TAG / CHIP ── */
+.tag {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  padding: 5px 12px;
+  border: 1px solid rgba(200,144,42,0.35);
+  color: #C8902A; border-radius: 2px;
+  margin-right: 8px; margin-bottom: 8px;
+}
+.tag-solid { background: #1B8FFF; border-color: #C8902A; color: #0B1F3A; }
+.bg-white .tag { border-color: rgba(14,12,10,0.25); color: #9A7800; }
+
+/* ── LIST ── */
+.check-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.check-list li {
+  font-size: 14px; font-weight: 300; line-height: 1.5;
+  padding-left: 20px; position: relative;
+  color: rgba(245,242,224,0.75);
+}
+.check-list li::before {
+  content: '—'; position: absolute; left: 0;
+  color: #C8902A; font-weight: 700;
+}
+.bg-white .check-list li { color: rgba(14,12,10,0.65); }
+.bg-white .check-list li::before { color: #D4A800; }
+
+/* ── TABLE ── */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+  color: #C8902A; padding: 10px 16px;
+  border-bottom: 1px solid rgba(200,144,42,0.3);
+  text-align: left; font-weight: 400;
+}
+.data-table td {
+  font-size: 13px; font-weight: 300; padding: 10px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  color: rgba(245,242,224,0.7);
+  vertical-align: top;
+}
+.data-table td strong { color: #F5F2E0; font-weight: 500; }
+.data-table td .hi { color: #C8902A; font-family: 'DM Mono', monospace; font-size: 12px; }
+.data-table tr:last-child td { border-bottom: none; }
+
+/* ── POSITIONING MAP ── */
+.pos-map {
+  position: relative;
+  width: 100%; padding-bottom: 65%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px;
+}
+.pos-map-inner { position: absolute; inset: 0; }
+.axis-h, .axis-v {
+  position: absolute;
+  background: rgba(255,255,255,0.12);
+}
+.axis-h { left: 0; right: 0; top: 50%; height: 1px; }
+.axis-v { top: 0; bottom: 0; left: 50%; width: 1px; }
+.axis-label {
+  position: absolute;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(245,242,224,0.3);
+}
+.dot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+}
+.dot-circle {
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; font-weight: 500; color: #0B1F3A;
+}
+.dot-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; letter-spacing: 1px; text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(245,242,224,0.55);
+}
+.dot-naak .dot-circle { background: #0B1F3A; width: 52px; height: 52px; font-size: 11px; font-weight: 700; }
+.dot-naak .dot-name   { color: #C8902A; font-weight: 600; }
+.dot-sm .dot-circle   { background: rgba(255,255,255,0.2); width: 32px; height: 32px; color: rgba(245,242,224,0.7); }
+
+/* ── HIGHLIGHT BOX ── */
+.highlight-box {
+  border-left: 3px solid #E8C000;
+  padding: 16px 20px;
+  background: rgba(27,143,255,0.05);
+  border-radius: 0 4px 4px 0;
+}
+.bg-white .highlight-box {
+  border-left-color: #D4A800;
+  background: rgba(212,168,0,0.06);
+}
+
+/* ── ANIMATE ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.slide > * { animation: fadeUp 0.5s ease both; }
+.slide > *:nth-child(2) { animation-delay: 0.06s; }
+.slide > *:nth-child(3) { animation-delay: 0.12s; }
+.slide > *:nth-child(4) { animation-delay: 0.18s; }
+.slide > *:nth-child(5) { animation-delay: 0.24s; }
+
+/* ── PRINT / EXPORT ── */
+@media print {
+  .nav { display: none; }
+  .slide { page-break-after: always; min-height: 100vh; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#s1"></a>
+  <a href="#s2"></a>
+  <a href="#s3"></a>
+  <a href="#s4"></a>
+  <a href="#s5"></a>
+  <a href="#s6"></a>
+  <a href="#s7"></a>
+  <a href="#s8"></a>
+  <a href="#s9"></a>
+  <a href="#s10"></a>
+  <a href="#s11"></a>
+  <a href="#s12"></a>
+  <a href="#s13"></a>
+  <a href="#s14"></a>
+  <a href="#s15"></a>
+  <a href="#s16"></a>
+</nav>
+
+<!-- ════════════════════════════════
+  SLIDE 1 — PORTADA
+════════════════════════════════ -->
+<section class="slide" id="s1" style="background:#0B1F3A;" style="justify-content:space-between; padding-top:100px; padding-bottom:80px;">
+  <div>
+    <div style="font-family:'Syne',sans-serif;font-size:72px;font-weight:800;letter-spacing:12px;color:#EDE8DC;line-height:1;">NAAK</div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(245,242,224,0.35);margin-top:10px;">Electrolitos en Polvo · Edición México</div>
+  </div>
+
+  <div>
+    <div style="font-family:'Syne',sans-serif;font-size:clamp(40px,5vw,64px);font-weight:800;line-height:0.95;letter-spacing:-1px;color:#F5F2E0;max-width:700px;">
+      Entendimiento<br>de la Industria
+    </div>
+    <div style="margin-top:24px;font-size:15px;font-weight:300;color:rgba(245,242,224,0.45);max-width:500px;line-height:1.7;">
+      Radiografía del mercado · Benchmark · Comunicación · Posicionamiento · Hallazgos estratégicos
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;justify-content:space-between;">
+    <div style="display:flex;gap:24px;">
+      <div class="tag tag-solid">Daily</div>
+      <div class="tag tag-solid">Sport</div>
+      <div class="tag" style="border-color:rgba(237,232,220,0.3);color:rgba(237,232,220,0.6);">2026</div>
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:rgba(245,242,224,0.2);">Confidencial</div>
+  </div>
+  <div class="slide-num">01 / 15</div>
+</section>
+
+<!-- ════════════════════════════════
+  SLIDE 2 — ÍNDICE
+════════════════════════════════ -->
+<section class="slide" id="s2" style="background:#F5F0E6;color:#0B1F3A;">
+  <div class="section-label">Contenido</div>
+  <div class="h1" style="color:#0B1F3A;margin-bottom:56px;">Índice</div>
+
+  <div class="grid-2" style="gap:16px;max-width:900px;">
+    <!-- item -->
+    <div style="display:flex;align-items:center;gap:20px;padding:20px 24px;border:1px solid rgba(11,31,58,0.1);border-radius:4px;">
+      <div style="font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:#C8902A;opacity:0.35;line-height:1;flex-shrink:0;">01</div>
+      <div>
+        <div class="h3" style="color:#0B1F3A;">Radiografía del mercado</div>
+        <div class="caption" style="margin-top:4px;">Tamaño · Tendencias · Consumidor</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:20px;padding:20px 24px;border:1px solid rgba(11,31,58,0.1);border-radius:4px;">
+      <div style="font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:#C8902A;opacity:0.35;line-height:1;flex-shrink:0;">02</div>
+      <div>
+        <div class="h3" style="color:#0B1F3A;">Benchmark</div>
+        <div class="caption" style="margin-top:4px;">Competidores · Fórmulas · Precios</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:20px;padding:20px 24px;border:1px solid rgba(11,31,58,0.1);border-radius:4px;">
+      <div style="font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:#C8902A;opacity:0.35;line-height:1;flex-shrink:0;">03</div>
+      <div>
+        <div class="h3" style="color:#0B1F3A;">Comunicación</div>
+        <div class="caption" style="margin-top:4px;">Claims · Canales · Mensajes</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:20px;padding:20px 24px;border:1px solid rgba(11,31,58,0.1);border-radius:4px;">
+      <div style="font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:#C8902A;opacity:0.35;line-height:1;flex-shrink:0;">04</div>
+      <div>
+        <div class="h3" style="color:#0B1F3A;">Matriz de posicionamiento</div>
+        <div class="caption" style="margin-top:4px;">Precio · Funcionalidad · Identidad</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:20px;padding:20px 24px;background:rgba(200,144,42,0.06);border:1px solid rgba(27,143,255,0.2);border-radius:4px;">
+      <div style="font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:#C8902A;opacity:0.6;line-height:1;flex-shrink:0;">05</div>
+      <div>
+        <div class="h3" style="color:#C8902A;">Hallazgos y ventana estratégica</div>
+        <div class="caption" style="margin-top:4px;color:rgba(27,143,255,0.5);">Oportunidad · Diferenciadores · Next steps</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">02 / 15</div>
+</section>
+
+<!-- ════════════════════════════════
+  SLIDE 3 — SECCIÓN 01 INTRO
+════════════════════════════════ -->
+<section class="slide bg-navy" id="s3" style="justify-content:center;">
+  <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:16px;">Sección 01</div>
+  <div style="font-family:'Syne',sans-serif;font-size:clamp(56px,8vw,100px);font-weight:800;letter-spacing:-2px;color:#FFFFFF;line-height:0.9;">Radiografía<br>del Mercado</div>
+  <div style="margin-top:24px;font-size:16px;font-weight:300;color:rgba(255,255,255,0.55);max-width:600px;line-height:1.7;">
+    Dimensionamiento, tendencias globales y el perfil del consumidor mexicano de electrolitos.
+  </div>
+  <div class="slide-num" style="color:rgba(255,255,255,0.3);">03 / 15</div>
+</section>
+
+<!-- ════════════════════════════════
+  SLIDE 4 — RADIOGRAFÍA
+════════════════════════════════ -->
+<section class="slide bg-ink" id="s4" style="padding-top:52px;padding-bottom:52px;">
+  <div class="section-label">01 — Radiografía del Mercado</div>
+  <div class="h1" style="margin-bottom:28px;">El mercado en números</div>
+
+  <!-- Row 1: MX polvo-specific stats -->
+  <div class="grid-4" style="margin-bottom:20px;">
+    <div class="card" style="border-color:rgba(27,143,255,0.25);background:rgba(200,144,42,0.06);">
+      <div class="stat-big">$48M</div>
+      <div class="stat-label">Mercado MX<br>electrolitos en polvo est. 2024</div>
+    </div>
+    <div class="card" style="border-color:rgba(27,143,255,0.25);background:rgba(200,144,42,0.06);">
+      <div class="stat-big">↑29%</div>
+      <div class="stat-label">Crecimiento anual<br>polvo vs. bebida lista 2023</div>
+    </div>
+    <div class="card" style="border-color:rgba(27,143,255,0.25);background:rgba(200,144,42,0.06);">
+      <div class="stat-big">73%</div>
+      <div class="stat-label">Consumidores MX prefieren<br>sin azúcar en suplementos</div>
+    </div>
+    <div class="card" style="border-color:rgba(27,143,255,0.25);background:rgba(200,144,42,0.06);">
+      <div class="stat-big">4 de 5</div>
+      <div class="stat-label">Marcas líderes en polvo<br>son importadas (EUA)</div>
+    </div>
+  </div>
+
+  <div class="row" style="gap:32px;">
+    <div class="col-2">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(245,242,224,0.3);margin-bottom:12px;">Por qué el polvo crece más que el líquido en MX</div>
+      <ul class="check-list">
+        <li>Menor precio por porción vs. bebidas ready-to-drink ($12–20 vs. $22–45)</li>
+        <li>Portabilidad — el stick cabe en cualquier bolsa o maleta de gym</li>
+        <li>Mayor control de dosis y personalización</li>
+        <li>Sin conservadores ni colorantes — percepción más "natural"</li>
+        <li>Crecimiento del e-commerce acelera la categoría sin restricción de frío</li>
+      </ul>
+    </div>
+    <div class="col">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(245,242,224,0.3);margin-bottom:12px;">Mercado polvo MX por ocasión de uso</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+          <span style="font-size:13px;font-weight:300;">Deporte & gym</span>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:80px;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;"><div style="width:48%;height:100%;background:#1B8FFF;"></div></div>
+            <span style="font-family:'DM Mono',monospace;font-size:11px;color:#C8902A;">48%</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+          <span style="font-size:13px;font-weight:300;">Hidratación diaria</span>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:80px;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;"><div style="width:26%;height:100%;background:#1B8FFF;"></div></div>
+            <span style="font-family:'DM Mono',monospace;font-size:11px;color:#C8902A;">26%</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+          <span style="font-size:13px;font-weight:300;">Recuperación / cruda</span>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:80px;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;"><div style="width:16%;height:100%;background:#1B8FFF;"></div></div>
+            <span style="font-family:'DM Mono',monospace;font-size:11px;color:#C8902A;">16%</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;">
+          <span style="font-size:13px;font-weight:300;">Salud / prescripción</span>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:80px;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;"><div style="width:10%;height:100%;background:#1B8FFF;"></div></div>
+            <span style="font-family:'DM Mono',monospace;font-size:11px;color:#C8902A;">10%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">04 / 15</div>
+</section>
+
+<!-- ════════════════════════════════
+  SLIDE 5 — BENCHMARK INTRO
+════════════════════════════════ -->
+<section class="slide bg-navy" id="s5" style="justify-content:center;">
+  <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:16px;">Sección 02</div>
+  <div style="font-family:'Syne',sans-serif;font-size:clamp(56px,8vw,100px);font-weight:800;letter-spacing:-2px;color:#FFFFFF;line-height:0.9;">Benchmark</div>
+  <div style="margin-top:24px;font-size:16px;font-weight:300;color:rgba(255,255,255,0.55);max-width:600px;line-height:1.7;">
+    Análisis de los principales competidores en México: fórmula, precio, empaque y posicionamiento.
+  </div>
+  <div class="slide-num" style="color:rgba(255,255,255,0.3);">05 / 15</div>
+</section>
+
+<!-- ════════════════════════════════
+  SLIDE 6 — BENCHMARK TABLE
+════════════════════════════════ -->
+<section class="slide bg-ink" id="s6" style="padding-top:60px;padding-bottom:60px;">
+  <div class="section-label">02 — Benchmark</div>
+  <div class="h1" style="margin-bottom:36px;">Competidores directos</div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Marca</th>
+        <th>Origen</th>
+        <th>Formato</th>
+        <th>Sodio / porción</th>
+        <th>Endulzante</th>
+        <th>Precio MX (stick)</th>
+        <th>Identidad MX</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Liquid IV</strong></td>
+        <td>EUA</td>
+        <td>Stick 16g</td>
+        <td class="hi" style="color:#C8902A;">500mg</td>
+        <td>Stevia + azúcar</td>
+        <td class="hi" style="color:#C8902A;">$45–55</td>
+        <td>Ninguna</td>
+      </tr>
+      <tr>
+        <td><strong>LMNT</strong></td>
+        <td>EUA</td>
+        <td>Stick 8g</td>
+        <td class="hi" style="color:#C8902A;">1,000mg</td>
+        <td>Stevia</td>
+        <td class="hi" style="color:#C8902A;">$65–80</td>
+        <td>Ninguna</td>
+      </tr>
+      <tr>
+        <td><strong>Electrolit</strong></td>
+        <td>México</td>
+        <td>Botella 625ml</td>
+        <td class="hi" style="color:#C8902A;">276mg</td>
+        <td>Azúcar</td>
+        <td class="hi" style="color:#C8902A;">$22–28</td>
+        <td>Media</td>
+      </tr>
+      <tr>
+        <td><strong>Electrolit Polvo</strong></td>
+        <td>México</td>
+        <td>Stick 10g</td>
+        <td class="hi" style="color:#C8902A;">290mg</td>
+        <td>Sucralosa + azúcar</td>
+        <td class="hi" style="color:#C8902A;">$18–24</td>
+        <td>Media</td>
+      </tr>
+      <tr>
+        <td><strong>Pedialyte Sport</strong></td>
+        <td>EUA</td>
+        <td>Polvo 35g</td>
+        <td class="hi" style="color:#C8902A;">490mg</td>
+        <td>Sucralosa</td>
+        <td class="hi" style="color:#C8902A;">$38–45</td>
+        <td>Ninguna</td>
+      </tr>
+      <tr>
+        <td><strong>Nuun</strong></td>
+        <td>EUA</td>
+        <td>Tableta 5.5g</td>
+        <td class="hi" style="color:#C8902A;">360mg</td>
+        <td>Stevia</td>
+        <td class="hi" style="color:#C8902A;">$30–38</td>
+        <td>Ninguna</td>
+      </tr>
+      <tr>
+        <td><strong>Yuyo</strong></td>
+        <td>México</td>
+        <td>Stick / Polvo</td>
+        <td class="hi" style="color:#C8902A;">~300mg</td>
+        <td>Stevia</td>
+        <td class="hi" style="color:#C8902A;">$28–38</td>
+        <td>Media-Alta</td>
+      </tr>
+      <tr>
+        <td><strong>Yaoca</strong></td>
+        <td>México</td>
+        <td>Stick</td>
+        <td class="hi" style="color:#C8902A;">~250mg</td>
+        <td>Stevia</td>
+        <td class="hi" style="color:#C8902A;">$25–35</td>
+        <td>Media-Alta</td>
+      </tr>
+      <tr style="background:rgba(200,144,42,0.06);">
+        <td><strong style="color:#C8902A;">NAAK Daily</strong></td>
+        <td style="color:#C8902A;">México</td>
+        <td style="color:#C8902A;">Stick 6g</td>
+        <td class="hi" style="color:#C8902A;">~200mg</td>
+        <td style="color:#C8902A;">Alulosa + Stevia</td>
+        <td class="hi" style="color:#C8902A;">$30–40*</td>
+        <td style="color:#C8902A;">Alta</td>
+      </tr>
+      <tr style="background:rgba(200,144,42,0.04);">
+        <td><strong style="color:#C8902A;">NAAK Sport</strong></td>
+        <td style="color:#C8902A;">México</td>
+        <td style="color:#C8902A;">Stick 6g</td>
+        <td class="hi" style="color:#C8902A;">~500mg</td>
+        <td style="color:#C8902A;">Alulosa + Stevia</td>
+        <td class="hi" style="color:#C8902A;">$35–45*</td>
+        <td style="color:#C8902A;">Alta</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:20px;font-family:'DM Mono',monospace;font-size:9px;color:rgba(245,242,224,0.2);letter-spacing:1px;">
+    * Precio NAAK = objetivo sugerido. Precios competidores verificados en Amazon MX, MercadoLibre, Farmacias del Ahorro y tiendas oficiales — abril 2025. Precio por stick/porción individual.
+  </div>
+
+  <div class="slide-num">06 / 15</div>
+</section>
+
+<!-- ════════════════════════════════
+  SLIDE 7 — COMUNICACIÓN INTRO
+════════════════════════════════ -->
+<section class="slide bg-navy" id="s7" style="justify-content:center;">
+  <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:16px;">Sección 03</div>
+  <div style="font-family:'Syne',sans-serif;font-size:clamp(56px,8vw,100px);font-weight:800;letter-spacing:-2px;color:#FFFFFF;line-height:0.9;">Comuni-<br>cación</div>
+  <div style="margin-top:24px;font-size:16px;font-weight:300;color:rgba(255,255,255,0.55);max-width:600px;line-height:1.7;">
+    Cómo hablan los competidores y dónde está el espacio para NAAK.
+  </div>
+  <div class="slide-num" style="color:rgba(255,255,255,0.3);">07 / 15</div>
+</section>
+
+<!-- ════════════════════════════════
+  SLIDE 8 — COMUNICACIÓN
+════════════════════════════════ -->
+<section class="slide bg-ink" id="s8">
+  <div class="section-label">03 — Comunicación</div>
+  <div class="h1" style="margin-bottom:40px;">Cómo comunica la competencia</div>
+
+  <div class="grid-3">
+    <!-- Rendimiento -->
+    <div class="card">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#C8902A;margin-bottom:16px;">Rendimiento</div>
+      <div class="h3" style="color:#F5F2E0;margin-bottom:12px;">Liquid IV / LMNT</div>
+      <ul class="check-list">
+        <li>Claims de ciencia y fórmula técnica</li>
+        <li>Atletas y lifestyle fitness como voceros</li>
+        <li>Enfoque en sodio alto como diferenciador</li>
+        <li>Inglés como idioma primario en MX</li>
+      </ul>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.07);">
+        <div style="font-size:12px;color:rgba(245,242,224,0.35);">Gap: no conectan con el consumidor mexicano cotidiano</div>
+      </div>
+    </div>
+
+    <!-- Médico -->
+    <div class="card">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#C8902A;margin-bottom:16px;">Médico / Clínico</div>
+      <div class="h3" style="color:#F5F2E0;margin-bottom:12px;">Pedialyte / Electrolit</div>
+      <ul class="check-list">
+        <li>Lenguaje de rehidratación y recuperación</li>
+        <li>Endorsement médico y farmacéutico</li>
+        <li>Azúcar o edulcorantes artificiales</li>
+        <li>Comunicación masiva, no aspiracional</li>
+      </ul>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.07);">
+        <div style="font-size:12px;color:rgba(245,242,224,0.35);">Gap: no conecta con el segmento wellness/clean</div>
+      </div>
+    </div>
+
+    <!-- Oportunidad -->
+    <div class="card" style="border-color:rgba(27,143,255,0.25);background:rgba(200,144,42,0.06);">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#C8902A;margin-bottom:16px;">Oportunidad NAAK</div>
+      <div class="h3" style="color:#C8902A;margin-bottom:12px;">Ciencia + Alma Mexicana</div>
+      <ul class="check-list">
+        <li>Fórmula visible y explicada en el frente</li>
+        <li>Sabores mexicanos como diferenciador de identidad</li>
+        <li>Alulosa como claim de innovación</li>
+        <li>Español de primera — no traducción</li>
+        <li>Nutrióloga como voz de autoridad cercana</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="highlight-box" style="margin-top:32px;">
+    <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#C8902A;margin-bottom:8px;">Insight clave</div>
+    <div style="font-size:14px;font-weight:300;color:rgba(245,242,224,0.7);line-height:1.7;">Ninguna marca con distribución masiva en México combina <strong style="color:#F5F2E0;">rigor científico + identidad nacional + clean label</strong>. Ese espacio está vacío.</div>
+  </div>
+
+  <div class="slide-num">08 / 15</div>
+</section>
+
+<!-- ════════════════════════════════
+  SLIDE 9 — MATRIZ INTRO
+════════════════════════════════ -->
+<section class="slide bg-navy" id="s9" style="justify-content:center;">
+  <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:16px;">Sección 04</div>
+  <div style="font-family:'Syne',sans-serif;font-size:clamp(48px,7vw,88px);font-weight:800;letter-spacing:-2px;color:#FFFFFF;line-height:0.9;">Matriz de<br>Posicionamiento</div>
+  <div style="margin-top:24px;font-size:16px;font-weight:300;color:rgba(255,255,255,0.55);max-width:600px;line-height:1.7;">
+    Dónde vive NAAK vs. la competencia en los dos ejes que importan.
+  </div>
+  <div class="slide-num" style="color:rgba(255,255,255,0.3);">09 / 15</div>
+</section>
+
+<!-- ════════════════════════════════
+  SLIDE 10 — MATRIZ
+════════════════════════════════ -->
+<section class="slide bg-ink" id="s10">
+  <div class="section-label">04 — Matriz de Posicionamiento</div>
+
+  <div class="row" style="gap:64px;align-items:center;">
+    <div class="col-2">
+      <div class="h1" style="margin-bottom:12px;">Clean Label<br>vs. Precio</div>
+      <div style="font-size:14px;font-weight:300;color:rgba(245,242,224,0.45);margin-bottom:40px;line-height:1.6;">Eje X: precio por porción · Eje Y: nivel de clean label / fórmula natural</div>
+
+      <!-- Map -->
+      <div class="pos-map">
+        <div class="pos-map-inner">
+          <div class="axis-h"></div>
+          <div class="axis-v"></div>
+          <!-- axis labels -->
+          <div class="axis-label" style="bottom:8px;left:4px;">Precio bajo</div>
+          <div class="axis-label" style="bottom:8px;right:4px;">Precio alto</div>
+          <div class="axis-label" style="top:4px;left:4px;">Clean label alto</div>
+          <div class="axis-label" style="bottom:30px;left:4px;">Clean label bajo</div>
+
+          <!-- dots -->
+          <div class="dot dot-naak" style="left:38%;top:18%;">
+            <div class="dot-circle">NAAK</div>
+            <div class="dot-name">Daily</div>
+          </div>
+          <div class="dot dot-naak" style="left:55%;top:14%;">
+            <div class="dot-circle" style="background:#D4A800;">NAAK</div>
+            <div class="dot-name">Sport</div>
+          </div>
+          <div class="dot dot-sm" style="left:70%;top:22%;">
+            <div class="dot-circle">LIV</div>
+            <div class="dot-name">Liquid IV</div>
+          </div>
+          <div class="dot dot-sm" style="left:80%;top:16%;">
+            <div class="dot-circle">LM</div>
+            <div class="dot-name">LMNT</div>
+          </div>
+          <div class="dot dot-sm" style="left:20%;top:62%;">
+            <div class="dot-circle">EL</div>
+            <div class="dot-name">Electrolit</div>
+          </div>
+          <div class="dot dot-sm" style="left:42%;top:55%;">
+            <div class="dot-circle">PD</div>
+            <div class="dot-name">Pedialyte</div>
+          </div>
+          <div class="dot dot-sm" style="left:60%;top:32%;">
+            <div class="dot-circle">NU</div>
+            <div class="dot-name">Nuun</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(245,242,224,0.3);margin-bottom:20px;">Lectura del mapa</div>
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div>
+          <div class="h3" style="color:#C8902A;margin-bottom:6px;">Cuadrante ideal</div>
+          <div style="font-size:13px;font-weight:300;color:rgba(245,242,224,0.6);line-height:1.6;">Clean label alto + precio accesible premium. NAAK Daily vive aquí — nadie más con fórmula mexicana lo ocupa.</div>
+        </div>
+        <div class="hdivider"></div>
+        <div>
+          <div class="h3" style="color:#F5F2E0;margin-bottom:6px;">NAAK vs. importados</div>
+          <div style="font-size:13px;font-weight:300;color:rgba(245,242,224,0.6);line-height:1.6;">Liquid IV y LMNT tienen clean label similar pero a precio 40–60% mayor. NAAK tiene ventaja competitiva clara en precio y en identidad local.</div>
+        </div>
+        <div class="hdivider"></div>
+        <div>
+          <div class="h3" style="color:#F5F2E0;margin-bottom:6px;">NAAK vs. nacionales</div>
+          <div style="font-size:13px;font-weight:300;color:rgba(245,242,224,0.6);line-height:1.6;">Electrolit y Pedialyte tienen precio bajo pero fórmula convencional (azúcar, artificiales). NAAK justifica precio premium con alulosa y bisglicinato.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">10 / 15</div>
+</section>
+
+<!-- ════════════════════════════════
+  SLIDE 11 — HALLAZGOS INTRO
+════════════════════════════════ -->
+<section class="slide bg-navy" id="s11" style="justify-content:center;">
+  <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:16px;">Sección 05</div>
+  <div style="font-family:'Syne',sans-serif;font-size:clamp(44px,6vw,80px);font-weight:800;letter-spacing:-2px;color:#FFFFFF;line-height:0.9;">Hallazgos y<br>Ventana<br>Estratégica</div>
+  <div style="margin-top:24px;font-size:16px;font-weight:300;color:rgba(255,255,255,0.55);max-width:600px;line-height:1.7;">
+    Lo que encontramos y cómo NAAK puede capitalizar la oportunidad.
+  </div>
+  <div class="slide-num" style="color:rgba(255,255,255,0.3);">11 / 15</div>
+</section>
+
+<!-- ════════════════════════════════
+  SLIDE 12 — HALLAZGOS
+════════════════════════════════ -->
+<section class="slide bg-black" id="s12" style="padding-top:64px;padding-bottom:64px;">
+  <div class="section-label">05 — Hallazgos y Ventana Estratégica</div>
+  <div class="h1" style="margin-bottom:40px;">La oportunidad de NAAK</div>
+
+  <div class="grid-3" style="margin-bottom:32px;">
+    <div style="border-top:2px solid #E8C000;padding-top:20px;">
+      <div style="font-family:'Syne',sans-serif;font-size:40px;font-weight:800;color:#C8902A;line-height:1;margin-bottom:8px;">01</div>
+      <div class="h3" style="color:#F5F2E0;margin-bottom:10px;">Sin azúcar + mexicano = vacío</div>
+      <div style="font-size:13px;font-weight:300;color:rgba(245,242,224,0.55);line-height:1.6;">No existe en México una marca que combine clean label con identidad nacional auténtica. Ese espacio es de NAAK.</div>
+    </div>
+    <div style="border-top:2px solid #E8C000;padding-top:20px;">
+      <div style="font-family:'Syne',sans-serif;font-size:40px;font-weight:800;color:#C8902A;line-height:1;margin-bottom:8px;">02</div>
+      <div class="h3" style="color:#F5F2E0;margin-bottom:10px;">Alulosa como diferenciador técnico</div>
+      <div style="font-size:13px;font-weight:300;color:rgba(245,242,224,0.55);line-height:1.6;">Ningún competidor en el mercado masivo MX usa alulosa. Es un claim de innovación que posiciona sin necesidad de explicación larga.</div>
+    </div>
+    <div style="border-top:2px solid #E8C000;padding-top:20px;">
+      <div style="font-family:'Syne',sans-serif;font-size:40px;font-weight:800;color:#C8902A;line-height:1;margin-bottom:8px;">03</div>
+      <div class="h3" style="color:#F5F2E0;margin-bottom:10px;">Dos líneas = dos mercados</div>
+      <div style="font-size:13px;font-weight:300;color:rgba(245,242,224,0.55);line-height:1.6;">Daily (sin sello exceso sodio) abre el mercado masivo. Sport (500mg Na) compite directo con LMNT y Liquid IV a mejor precio.</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div class="card" style="border-color:rgba(27,143,255,0.2);background:rgba(200,144,42,0.04);">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#C8902A;margin-bottom:12px;">Ventana estratégica</div>
+      <ul class="check-list">
+        <li>Lanzar con Lima Limón y Jamaica Daily para validar mercado y generar awareness</li>
+        <li>Activar canal digital primero: TikTok + Instagram con la nutrióloga como vocera</li>
+        <li>Distribuir en gym boutique y tiendas naturistas antes de retail masivo</li>
+        <li>Introducir Sport en Q2 una vez establecida la línea Daily</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:rgba(27,143,255,0.2);background:rgba(200,144,42,0.04);">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#C8902A;margin-bottom:12px;">Riesgos a mitigar</div>
+      <ul class="check-list">
+        <li>Registro COFEPRIS: iniciar proceso desde ahora con la nutrióloga como responsable sanitaria</li>
+        <li>Nombre NAAK: verificar disponibilidad en IMPI antes del lanzamiento</li>
+        <li>Educación del consumidor sobre alulosa: contenido simple y visual en redes</li>
+        <li>Costo de alulosa: negociar volumen con proveedor para proteger margen</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="slide-num">12 / 15</div>
+</section>
+
+
+<!-- ════════════════════════════════
+  SLIDE 13 — CANALES DE VENTA INTRO
+════════════════════════════════ -->
+<section class="slide bg-navy" id="s13" style="justify-content:center;">
+  <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:16px;">Sección 06</div>
+  <div style="font-family:'Syne',sans-serif;font-size:clamp(48px,7vw,88px);font-weight:800;letter-spacing:-2px;color:#FFFFFF;line-height:0.9;">Canales<br>de Venta</div>
+  <div style="margin-top:24px;font-size:16px;font-weight:300;color:rgba(255,255,255,0.55);max-width:600px;line-height:1.7;">
+    Dónde puede venderse NAAK — de lanzamiento a escala.
+  </div>
+  <div class="slide-num" style="color:rgba(255,255,255,0.3);">13 / 16</div>
+</section>
+
+<!-- ════════════════════════════════
+  SLIDE 14 — CANALES DE VENTA
+════════════════════════════════ -->
+<section class="slide bg-ink" id="s14" style="padding-top:52px;padding-bottom:52px;">
+  <div class="section-label">06 — Canales de Venta</div>
+  <div class="h1" style="margin-bottom:36px;">Dónde vender NAAK</div>
+
+  <div class="grid-3" style="margin-bottom:32px;">
+
+    <!-- Fase 1 -->
+    <div class="card" style="border-top:3px solid #C8902A;border-color:rgba(27,143,255,0.3);">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#C8902A;margin-bottom:6px;">Fase 1 — Lanzamiento</div>
+      <div class="h3" style="color:#F5F2E0;margin-bottom:16px;">Digital directo</div>
+      <ul class="check-list">
+        <li><strong style="color:#F5F2E0;">Tienda propia</strong> — Shopify con suscripción mensual</li>
+        <li><strong style="color:#F5F2E0;">Amazon MX</strong> — visibilidad orgánica + reviews</li>
+        <li><strong style="color:#F5F2E0;">MercadoLibre</strong> — mayor volumen de búsquedas wellness en MX</li>
+        <li><strong style="color:#F5F2E0;">TikTok Shop</strong> — conversión directa desde contenido</li>
+      </ul>
+      <div style="margin-top:16px;font-family:'DM Mono',monospace;font-size:9px;color:rgba(27,143,255,0.5);letter-spacing:1px;">Sin intermediario · Margen alto · Data directa</div>
+    </div>
+
+    <!-- Fase 2 -->
+    <div class="card">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#C8902A;margin-bottom:6px;">Fase 2 — Validación</div>
+      <div class="h3" style="color:#F5F2E0;margin-bottom:16px;">Canal especializado</div>
+      <ul class="check-list">
+        <li><strong style="color:#F5F2E0;">Gyms boutique</strong> — CrossFit, F45, OrangeTheory, Barry's</li>
+        <li><strong style="color:#F5F2E0;">Estudios de yoga</strong> y wellness centers</li>
+        <li><strong style="color:#F5F2E0;">Tiendas naturistas</strong> — GNC, Nutrisa, El Nutritivo</li>
+        <li><strong style="color:#F5F2E0;">Consultorios de nutrición</strong> — vía la nutrióloga embajadora</li>
+        <li><strong style="color:#F5F2E0;">Farmacias independientes</strong> premium</li>
+      </ul>
+      <div style="margin-top:16px;font-family:'DM Mono',monospace;font-size:9px;color:rgba(245,242,224,0.25);letter-spacing:1px;">Validación de producto · Comunidad · Referencia médica</div>
+    </div>
+
+    <!-- Fase 3 -->
+    <div class="card">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#C8902A;margin-bottom:6px;">Fase 3 — Escala</div>
+      <div class="h3" style="color:#F5F2E0;margin-bottom:16px;">Retail masivo</div>
+      <ul class="check-list">
+        <li><strong style="color:#F5F2E0;">Walmart MX</strong> — sección salud y bienestar</li>
+        <li><strong style="color:#F5F2E0;">Sam's Club</strong> — presentación multipack</li>
+        <li><strong style="color:#F5F2E0;">Liverpool / Palacio de Hierro</strong> — sección gourmet/wellness</li>
+        <li><strong style="color:#F5F2E0;">OXXO</strong> — stick unitario impulso</li>
+        <li><strong style="color:#F5F2E0;">City Market / La Comer</strong> — segmento premium</li>
+      </ul>
+      <div style="margin-top:16px;font-family:'DM Mono',monospace;font-size:9px;color:rgba(245,242,224,0.25);letter-spacing:1px;">Volumen · Penetración masiva · Brand awareness</div>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#C8902A;margin-bottom:8px;">Recomendación de entrada</div>
+    <div style="font-size:14px;font-weight:300;color:rgba(245,242,224,0.7);line-height:1.7;">Comenzar con <strong style="color:#F5F2E0;">digital + gyms boutique en CDMX, GDL y MTY</strong>. Bajo costo de entrada, alta densidad del consumidor objetivo y velocidad de aprendizaje. Retail masivo una vez con tracción probada y registro COFEPRIS activo.</div>
+  </div>
+
+  <div class="slide-num">14 / 16</div>
+</section>
+
+<!-- ════════════════════════════════
+  SLIDE 15 — PERFIL DE CLIENTE
+════════════════════════════════ -->
+<section class="slide bg-black" id="s15" style="padding-top:52px;padding-bottom:52px;">
+  <div class="section-label">07 — Perfil de Cliente</div>
+  <div class="h1" style="margin-bottom:36px;">¿Quién compra NAAK?</div>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:32px;">
+
+    <!-- Perfil 1 -->
+    <div class="card" style="border-top:3px solid #C8902A;">
+      <div style="font-size:28px;margin-bottom:10px;">🏃‍♀️</div>
+      <div class="h3" style="color:#FFFFFF;margin-bottom:6px;">El Activo</div>
+      <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(245,242,224,0.3);margin-bottom:12px;">25–40 años · ABC+</div>
+      <ul class="check-list">
+        <li>Gym 3–5 veces/semana</li>
+        <li>Runner, ciclista, crossfitter</li>
+        <li>Ya usa suplementos</li>
+        <li>Busca rendimiento + clean label</li>
+        <li>Compra en Amazon / tienda propia</li>
+      </ul>
+      <div style="margin-top:14px;padding:8px;background:rgba(200,144,42,0.06);border-radius:2px;">
+        <div style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(27,143,255,0.8);letter-spacing:1px;">Línea preferida: Sport</div>
+      </div>
+    </div>
+
+    <!-- Perfil 2 -->
+    <div class="card" style="border-top:3px solid rgba(255,255,255,0.15);">
+      <div style="font-size:28px;margin-bottom:10px;">💼</div>
+      <div class="h3" style="color:#F5F2E0;margin-bottom:6px;">El Profesional</div>
+      <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(245,242,224,0.3);margin-bottom:12px;">28–45 años · ABC+</div>
+      <ul class="check-list">
+        <li>Vida activa pero no atleta</li>
+        <li>Cuida su alimentación</li>
+        <li>Busca hidratación diaria sin azúcar</li>
+        <li>Susceptible al claim "alulosa"</li>
+        <li>Compra en City Market / Liverpool</li>
+      </ul>
+      <div style="margin-top:14px;padding:8px;background:rgba(255,255,255,0.04);border-radius:2px;">
+        <div style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(245,242,224,0.4);letter-spacing:1px;">Línea preferida: Daily</div>
+      </div>
+    </div>
+
+    <!-- Perfil 3 -->
+    <div class="card" style="border-top:3px solid rgba(255,255,255,0.15);">
+      <div style="font-size:28px;margin-bottom:10px;">🌿</div>
+      <div class="h3" style="color:#F5F2E0;margin-bottom:6px;">La Consciente</div>
+      <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(245,242,224,0.3);margin-bottom:12px;">25–38 años · ABC</div>
+      <ul class="check-list">
+        <li>Lee etiquetas y busca ingredientes naturales</li>
+        <li>Yoga, pilates, alimentación plant-based</li>
+        <li>Influenciada por recomendación médica</li>
+        <li>Comparte en redes si le encanta el producto</li>
+        <li>Compra en naturistas y Shopify</li>
+      </ul>
+      <div style="margin-top:14px;padding:8px;background:rgba(255,255,255,0.04);border-radius:2px;">
+        <div style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(245,242,224,0.4);letter-spacing:1px;">Línea preferida: Daily</div>
+      </div>
+    </div>
+
+    <!-- Perfil 4 -->
+    <div class="card" style="border-top:3px solid rgba(255,255,255,0.15);">
+      <div style="font-size:28px;margin-bottom:10px;">🎉</div>
+      <div class="h3" style="color:#F5F2E0;margin-bottom:6px;">El Social</div>
+      <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(245,242,224,0.3);margin-bottom:12px;">22–35 años · BC+</div>
+      <ul class="check-list">
+        <li>Usa electrolitos para la cruda</li>
+        <li>Vida nocturna activa</li>
+        <li>Descubre por TikTok o recomendación</li>
+        <li>Precio-sensible pero fiel si le funciona</li>
+        <li>Compra en OXXO / MercadoLibre</li>
+      </ul>
+      <div style="margin-top:14px;padding:8px;background:rgba(255,255,255,0.04);border-radius:2px;">
+        <div style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(245,242,224,0.4);letter-spacing:1px;">Línea preferida: Daily</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#C8902A;margin-bottom:8px;">Cliente primario de lanzamiento</div>
+    <div style="font-size:14px;font-weight:300;color:rgba(245,242,224,0.7);line-height:1.7;">
+      <strong style="color:#F5F2E0;">Mujer y hombre, 25–40 años, NSE ABC+, CDMX / GDL / MTY</strong> — activo, consciente de su salud, que ya compra suplementos o bebidas funcionales y está frustrado con los ingredientes artificiales de las opciones actuales. Es quien primero comparte el producto en redes.
+    </div>
+  </div>
+
+  <div class="slide-num">15 / 16</div>
+</section>
+
+
+<!-- ════════════════════════════════
+  SLIDE 16 — METAS
+════════════════════════════════ -->
+<section class="slide bg-black" id="s16" style="padding-top:52px;padding-bottom:52px;">
+  <div class="section-label">Roadmap</div>
+  <div class="h1" style="margin-bottom:40px;">Metas por Plazo</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin-bottom:32px;">
+
+    <!-- Corto plazo -->
+    <div style="background:#C8902A;padding:36px 32px;position:relative;">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px;">Corto plazo</div>
+      <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#0B1F3A;margin-bottom:4px;line-height:1;">0 – 6 meses</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,0.45);margin-bottom:24px;letter-spacing:1px;">Lanzamiento y validación</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#0B1F3A;margin-top:6px;flex-shrink:0;"></div>
+          <div style="font-size:13px;font-weight:400;color:rgba(255,255,255,0.9);line-height:1.5;">Registro COFEPRIS y nombre IMPI</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#0B1F3A;margin-top:6px;flex-shrink:0;"></div>
+          <div style="font-size:13px;font-weight:400;color:rgba(255,255,255,0.9);line-height:1.5;">Lanzar Lima Limón Daily y Jamaica Daily</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#0B1F3A;margin-top:6px;flex-shrink:0;"></div>
+          <div style="font-size:13px;font-weight:400;color:rgba(255,255,255,0.9);line-height:1.5;">Venta directa: Shopify + Amazon MX + MercadoLibre</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#0B1F3A;margin-top:6px;flex-shrink:0;"></div>
+          <div style="font-size:13px;font-weight:400;color:rgba(255,255,255,0.9);line-height:1.5;">Activar a la nutrióloga como primera embajadora</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#0B1F3A;margin-top:6px;flex-shrink:0;"></div>
+          <div style="font-size:13px;font-weight:400;color:rgba(255,255,255,0.9);line-height:1.5;">Meta: primeras 500 bolsas vendidas · 100 reviews</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mediano plazo -->
+    <div style="background:#121F35;padding:36px 32px;border-top:3px solid #C8902A;">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(27,143,255,0.5);margin-bottom:8px;">Mediano plazo</div>
+      <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#F5F2E0;margin-bottom:4px;line-height:1;">6 – 18 meses</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,242,224,0.3);margin-bottom:24px;letter-spacing:1px;">Crecimiento y expansión</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#EDE8DC;margin-top:6px;flex-shrink:0;"></div>
+          <div style="font-size:13px;font-weight:300;color:rgba(245,242,224,0.7);line-height:1.5;">Lanzar línea Sport Lima Limón + Jamaica Sport</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#EDE8DC;margin-top:6px;flex-shrink:0;"></div>
+          <div style="font-size:13px;font-weight:300;color:rgba(245,242,224,0.7);line-height:1.5;">Entrar a gyms boutique en CDMX, GDL y MTY</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#EDE8DC;margin-top:6px;flex-shrink:0;"></div>
+          <div style="font-size:13px;font-weight:300;color:rgba(245,242,224,0.7);line-height:1.5;">Tercer sabor: Tamarindo o Guayaba</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#EDE8DC;margin-top:6px;flex-shrink:0;"></div>
+          <div style="font-size:13px;font-weight:300;color:rgba(245,242,224,0.7);line-height:1.5;">Programa de suscripción mensual activo</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#EDE8DC;margin-top:6px;flex-shrink:0;"></div>
+          <div style="font-size:13px;font-weight:300;color:rgba(245,242,224,0.7);line-height:1.5;">Meta: $500K MXN en ventas mensuales · 3 distribuidores</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Largo plazo -->
+    <div style="background:#0D1929;padding:36px 32px;border-top:3px solid rgba(200,144,42,0.3);">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(27,143,255,0.35);margin-bottom:8px;">Largo plazo</div>
+      <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#F5F2E0;margin-bottom:4px;line-height:1;">18 – 36 meses</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,242,224,0.2);margin-bottom:24px;letter-spacing:1px;">Consolidación y escala nacional</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:6px;height:6px;border-radius:50%;background:rgba(237,232,220,0.4);margin-top:6px;flex-shrink:0;"></div>
+          <div style="font-size:13px;font-weight:300;color:rgba(245,242,224,0.5);line-height:1.5;">Entrada a Walmart, Liverpool y City Market</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:6px;height:6px;border-radius:50%;background:rgba(237,232,220,0.4);margin-top:6px;flex-shrink:0;"></div>
+          <div style="font-size:13px;font-weight:300;color:rgba(245,242,224,0.5);line-height:1.5;">Línea completa: 4+ sabores Daily + 2 Sport</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:6px;height:6px;border-radius:50%;background:rgba(237,232,220,0.4);margin-top:6px;flex-shrink:0;"></div>
+          <div style="font-size:13px;font-weight:300;color:rgba(245,242,224,0.5);line-height:1.5;">Exportación piloto a EUA (mercado hispano)</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:6px;height:6px;border-radius:50%;background:rgba(237,232,220,0.4);margin-top:6px;flex-shrink:0;"></div>
+          <div style="font-size:13px;font-weight:300;color:rgba(245,242,224,0.5);line-height:1.5;">NAAK como la marca #1 de electrolitos en polvo clean label hecha en México</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:6px;height:6px;border-radius:50%;background:rgba(237,232,220,0.4);margin-top:6px;flex-shrink:0;"></div>
+          <div style="font-size:13px;font-weight:300;color:rgba(245,242,224,0.5);line-height:1.5;">Meta: $3M MXN ventas mensuales · presencia nacional</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#C8902A;margin-bottom:8px;">El norte</div>
+    <div style="font-size:14px;font-weight:300;color:rgba(245,242,224,0.7);line-height:1.7;">
+      Ser la primera marca mexicana de electrolitos en polvo con <strong style="color:#F5F2E0;">distribución nacional, clean label certificado y exportación a EUA</strong> — compitiendo de igual a igual con LMNT y Liquid IV pero con alma 100% mexicana.
+    </div>
+  </div>
+
+  <div class="slide-num">16 / 16</div>
+</section>
+
+<script>
+// Active nav dot on scroll
+const sections = document.querySelectorAll('.slide');
+const navLinks = document.querySelectorAll('.nav a');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const id = entry.target.id;
+      const link = document.querySelector(`.nav a[href="#${id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.5 });
+
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
