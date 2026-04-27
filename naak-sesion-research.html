@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAAK — Sesión de Research · Abril 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:     #F5F2E0;
+  --bg2:    #EAE6C8;
+  --ink:    #0E0C0A;
+  --mid:    #7A7060;
+  --light:  #D0C8B8;
+  --yellow: #E8C000;
+  --yellow2:#9A7800;
+  --lime:   #78C800;
+  --gold:   #C8902A;
+  --dark:   #0E0C0A;
+  --white:  #FDFAF5;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+body::before {
+  content:''; position:fixed; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:999;
+}
+
+.page { max-width:860px; margin:0 auto; padding:0 48px 120px; }
+
+/* ── HEADER ── */
+header {
+  padding: 56px 48px 48px;
+  max-width:860px; margin:0 auto;
+  display:flex; justify-content:space-between; align-items:flex-start;
+  border-bottom:2px solid var(--ink);
+}
+.h-brand {
+  font-family:'Syne',sans-serif;
+  font-size:32px; font-weight:800; letter-spacing:8px;
+  color:var(--ink);
+}
+.h-right { text-align:right; }
+.h-title {
+  font-family:'DM Mono',monospace;
+  font-size:10px; letter-spacing:3px; text-transform:uppercase;
+  color:var(--mid);
+}
+.h-date {
+  font-family:'DM Mono',monospace;
+  font-size:9px; color:var(--light); margin-top:4px; letter-spacing:2px;
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 64px 0 48px;
+  border-bottom: 1px solid var(--light);
+}
+.hero-tag {
+  font-family:'DM Mono',monospace;
+  font-size:9px; letter-spacing:4px; text-transform:uppercase;
+  color:var(--mid); margin-bottom:12px;
+}
+.hero-title {
+  font-family:'Syne',sans-serif;
+  font-size:clamp(32px,5vw,52px); font-weight:800;
+  line-height:1; letter-spacing:-1px; color:var(--ink);
+  margin-bottom:16px;
+}
+.hero-title span { color:var(--yellow2); }
+.hero-desc {
+  font-size:15px; font-weight:300; color:var(--mid);
+  line-height:1.8; max-width:580px;
+}
+
+/* ── SECTION ── */
+.section { padding-top:72px; }
+.section-header {
+  display:flex; align-items:center; gap:16px;
+  margin-bottom:32px; padding-bottom:16px;
+  border-bottom:1px solid var(--light);
+}
+.section-num {
+  font-family:'DM Mono',monospace;
+  font-size:9px; letter-spacing:3px; text-transform:uppercase;
+  color:var(--yellow2); background:var(--ink);
+  padding:6px 12px; border-radius:2px;
+}
+.section-title {
+  font-family:'Syne',sans-serif;
+  font-size:22px; font-weight:800; letter-spacing:0.5px;
+  color:var(--ink);
+}
+
+/* ── COMPETITOR CARDS ── */
+.comp-list { display:flex; flex-direction:column; gap:2px; }
+.comp-card {
+  background:var(--white);
+  border-left:4px solid var(--light);
+  padding:24px 28px;
+  transition:border-color 0.2s;
+}
+.comp-card:hover { border-left-color:var(--yellow); }
+.comp-header {
+  display:flex; justify-content:space-between; align-items:flex-start;
+  margin-bottom:12px;
+}
+.comp-name {
+  font-family:'Syne',sans-serif;
+  font-size:18px; font-weight:700; color:var(--ink);
+}
+.comp-type {
+  font-family:'DM Mono',monospace;
+  font-size:8px; letter-spacing:2px; text-transform:uppercase;
+  padding:4px 10px; background:var(--bg2); color:var(--mid);
+  border-radius:2px;
+}
+.comp-angle {
+  font-family:'DM Mono',monospace;
+  font-size:10px; color:var(--yellow2); font-weight:500;
+  margin-bottom:8px; letter-spacing:1px;
+}
+.comp-learns { display:flex; flex-direction:column; gap:4px; }
+.comp-learn {
+  font-size:12px; font-weight:300; color:var(--mid); line-height:1.6;
+  padding-left:14px; position:relative;
+}
+.comp-learn::before {
+  content:'→'; position:absolute; left:0;
+  color:var(--yellow2); font-size:10px;
+}
+.comp-learn.win::before { content:'✓'; color:var(--lime); }
+.comp-learn.watch::before { content:'!'; color:var(--gold); }
+
+/* ── INSIGHTS GRID ── */
+.insights-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:2px;
+}
+.insight-card {
+  background:var(--white); padding:28px 24px;
+}
+.insight-icon {
+  font-size:20px; margin-bottom:10px;
+}
+.insight-title {
+  font-family:'Syne',sans-serif;
+  font-size:15px; font-weight:700; color:var(--ink); margin-bottom:6px;
+}
+.insight-text {
+  font-size:12px; font-weight:300; color:var(--mid); line-height:1.7;
+}
+
+/* ── HEADLINES ── */
+.headlines-grid { display:flex; flex-direction:column; gap:2px; }
+.headline-card {
+  background:var(--white); padding:20px 28px;
+  display:flex; align-items:center; gap:20px;
+}
+.headline-card.star { background:var(--ink); }
+.headline-tag {
+  font-family:'DM Mono',monospace;
+  font-size:8px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--mid); min-width:80px;
+}
+.headline-card.star .headline-tag { color:var(--yellow); opacity:0.6; }
+.headline-text {
+  font-family:'Syne',sans-serif;
+  font-size:15px; font-weight:700; color:var(--ink); line-height:1.3;
+}
+.headline-card.star .headline-text { color:var(--white); }
+
+/* ── STRATEGY BLOCKS ── */
+.strategy-list { display:flex; flex-direction:column; gap:2px; }
+.strategy-item {
+  background:var(--white); padding:28px;
+  display:flex; gap:24px;
+}
+.strategy-num {
+  font-family:'DM Mono',monospace;
+  font-size:11px; font-weight:500; color:var(--yellow);
+  min-width:28px; padding-top:2px;
+}
+.strategy-content {}
+.strategy-title {
+  font-family:'Syne',sans-serif;
+  font-size:16px; font-weight:700; color:var(--ink); margin-bottom:6px;
+}
+.strategy-text {
+  font-size:12px; font-weight:300; color:var(--mid); line-height:1.8;
+}
+.strategy-tag {
+  display:inline-block; margin-top:10px;
+  font-family:'DM Mono',monospace;
+  font-size:8px; letter-spacing:2px; text-transform:uppercase;
+  padding:4px 10px; border:1px solid var(--light);
+  color:var(--mid); border-radius:2px;
+}
+
+/* ── DONATION PLAN ── */
+.donation-hero {
+  background:var(--ink); padding:40px;
+  margin-bottom:2px;
+}
+.donation-hero-label {
+  font-family:'DM Mono',monospace;
+  font-size:9px; letter-spacing:4px; text-transform:uppercase;
+  color:var(--yellow); opacity:0.6; margin-bottom:12px;
+}
+.donation-hero-title {
+  font-family:'Syne',sans-serif;
+  font-size:28px; font-weight:800; color:var(--white);
+  line-height:1.2; margin-bottom:12px;
+}
+.donation-hero-text {
+  font-size:13px; font-weight:300;
+  color:rgba(245,242,224,0.55); line-height:1.8;
+}
+
+.donation-steps { display:flex; flex-direction:column; gap:2px; }
+.donation-step {
+  background:var(--white); padding:24px 28px;
+  display:flex; gap:20px; align-items:flex-start;
+}
+.step-timing {
+  font-family:'DM Mono',monospace;
+  font-size:8px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--yellow2); min-width:90px; padding-top:3px;
+}
+.step-content {}
+.step-title {
+  font-family:'Syne',sans-serif;
+  font-size:15px; font-weight:700; color:var(--ink); margin-bottom:4px;
+}
+.step-text {
+  font-size:12px; font-weight:300; color:var(--mid); line-height:1.7;
+}
+.step-detail {
+  font-family:'DM Mono',monospace;
+  font-size:9px; color:var(--yellow2); margin-top:8px; letter-spacing:1px;
+}
+
+/* ── CONTACT BOX ── */
+.contact-box {
+  background:var(--bg2); padding:32px;
+  border-left:4px solid var(--yellow);
+  margin-top:2px;
+}
+.contact-label {
+  font-family:'DM Mono',monospace;
+  font-size:8px; letter-spacing:4px; text-transform:uppercase;
+  color:var(--yellow2); margin-bottom:16px;
+}
+.contact-title {
+  font-family:'Syne',sans-serif;
+  font-size:18px; font-weight:700; color:var(--ink); margin-bottom:16px;
+}
+.contact-items { display:flex; flex-direction:column; gap:8px; }
+.contact-item {
+  display:flex; gap:12px; align-items:baseline;
+}
+.contact-key {
+  font-family:'DM Mono',monospace;
+  font-size:9px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--mid); min-width:80px;
+}
+.contact-val {
+  font-family:'DM Mono',monospace;
+  font-size:11px; color:var(--ink); font-weight:500;
+}
+
+/* ── NEXT STEPS ── */
+.nextsteps {
+  background:var(--yellow); padding:40px;
+  margin-top:2px;
+}
+.nextsteps-label {
+  font-family:'DM Mono',monospace;
+  font-size:9px; letter-spacing:4px; text-transform:uppercase;
+  color:rgba(14,12,10,0.45); margin-bottom:16px;
+}
+.nextsteps-title {
+  font-family:'Syne',sans-serif;
+  font-size:24px; font-weight:800; color:var(--ink); margin-bottom:24px;
+}
+.steps-list { display:flex; flex-direction:column; gap:10px; }
+.next-item {
+  display:flex; gap:16px; align-items:flex-start;
+}
+.next-check {
+  width:20px; height:20px; border:2px solid rgba(14,12,10,0.3);
+  border-radius:2px; flex-shrink:0; margin-top:2px;
+}
+.next-text { font-size:13px; font-weight:400; color:rgba(14,12,10,0.75); line-height:1.6; }
+.next-text strong { color:var(--ink); font-weight:700; }
+
+/* ── DIVIDER ── */
+.divider { width:100%; height:1px; background:var(--light); margin-top:72px; }
+
+/* ── ANIMATE ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.fade { animation: fadeUp 0.6s cubic-bezier(0.23,1,0.32,1) both; }
+.d1{animation-delay:.05s} .d2{animation-delay:.12s}
+.d3{animation-delay:.2s}  .d4{animation-delay:.28s}
+.d5{animation-delay:.36s}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-brand">NAAK</div>
+  <div class="h-right">
+    <div class="h-title">Sesión de Research & Estrategia</div>
+    <div class="h-date">Abril 26, 2026 · Confidencial</div>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero fade d1">
+    <div class="hero-tag">// Resumen ejecutivo</div>
+    <div class="hero-title">Lo que aprendimos<br><span>en una noche.</span></div>
+    <div class="hero-desc">Análisis de competidores internacionales y mexicanos, identificación de oportunidades de posicionamiento, estrategias de marketing accionables, y plan concreto de impacto social con el COMUDE Zapopan.</div>
+  </div>
+
+  <!-- ═══ 01 COMPETIDORES ═══ -->
+  <div class="section fade d2">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div class="section-title">Análisis de competidores</div>
+    </div>
+
+    <div class="comp-list">
+
+      <div class="comp-card">
+        <div class="comp-header">
+          <div class="comp-name">LMNT</div>
+          <div class="comp-type">Internacional · EUA</div>
+        </div>
+        <div class="comp-angle">"More Salt, Not Less" — vende con ciencia y autoridad contra el gobierno</div>
+        <div class="comp-learns">
+          <div class="comp-learn win">Comunicación científica muy sólida — cita estudios JAMA</div>
+          <div class="comp-learn win">Tono directo y sin disculpas — genera tribu fiel</div>
+          <div class="comp-learn watch">1,000mg sodio — tiene sello de exceso en México</div>
+          <div class="comp-learn watch">Precio importado elevado — barrera de acceso real</div>
+          <div class="comp-learn">Sin propósito social ni contexto mexicano</div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-header">
+          <div class="comp-name">Liquid I.V.</div>
+          <div class="comp-type">Internacional · EUA</div>
+        </div>
+        <div class="comp-angle">"Faster hydration" — validó la alulosa como mecanismo de absorción sin azúcar</div>
+        <div class="comp-learns">
+          <div class="comp-learn win">Educó al mercado sobre alulosa — NAAK ya la tiene</div>
+          <div class="comp-learn win">Marketing de ocasiones muy efectivo — momentos de uso claros</div>
+          <div class="comp-learn win">Impacto social integrado al DNA de marca</div>
+          <div class="comp-learn watch">Su blend de aminoácidos + alulosa es patentado — no copiable</div>
+          <div class="comp-learn">Sin relevancia cultural para México</div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-header">
+          <div class="comp-name">IM8 (David Beckham)</div>
+          <div class="comp-type">Internacional · Premium</div>
+        </div>
+        <div class="comp-angle">Celebrity como co-fundador, no endorser — tabla comparativa agresiva vs competidores</div>
+        <div class="comp-learns">
+          <div class="comp-learn win">Garantía de 90 días — reduce fricción de compra brutalmente</div>
+          <div class="comp-learn win">"Nutrition is a Right, Not a Privilege" — impacto social con métricas reales</div>
+          <div class="comp-learn win">Tabla comparativa nombra competidores con porcentajes exactos</div>
+          <div class="comp-learn">Categoría distinta (greens/multivit) pero el modelo de marca es inspirador</div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-header">
+          <div class="comp-name">Create</div>
+          <div class="comp-type">Internacional · Gym</div>
+        </div>
+        <div class="comp-angle">Creatina + Electrolitos — "2 pájaros de un tiro"</div>
+        <div class="comp-learns">
+          <div class="comp-learn win">Stack inteligente — eficiencia para el consumidor que optimiza rutinas</div>
+          <div class="comp-learn watch">Creatina en México complica COFEPRIS y excluye embarazadas</div>
+          <div class="comp-learn">Inspiración para futura línea NAAK Performance</div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-header">
+          <div class="comp-name">k2o by Sprinter</div>
+          <div class="comp-type">Internacional · Belleza</div>
+        </div>
+        <div class="comp-angle">Electrolitos + Ácido hialurónico + Colágeno — "skin hydration"</div>
+        <div class="comp-learns">
+          <div class="comp-learn win">Muestra que el mercado se fragmenta en nichos — hay espacio para todos</div>
+          <div class="comp-learn win">Público femenino consciente — conecta con momento "Embarazo" de NAAK</div>
+          <div class="comp-learn">Inspiración para futura línea NAAK Glow</div>
+        </div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-header">
+          <div class="comp-name">Nuun / DripDrop</div>
+          <div class="comp-type">Internacional · Deporte</div>
+        </div>
+        <div class="comp-angle">"Us Vs Them" — tablas comparativas con competidores nombrados. "Hydration is second only to oxygen."</div>
+        <div class="comp-learns">
+          <div class="comp-learn win">Formato "Us Vs Them" es el estándar de la categoría — NAAK necesita el suyo</div>
+          <div class="comp-learn win">Headlines con datos concretos hacen el trabajo de venta solos</div>
+          <div class="comp-learn win">"What's inside" — diseño de rueda alrededor del producto, perfecto para redes</div>
+        </div>
+      </div>
+
+      <div class="comp-card" style="border-left-color:var(--gold);">
+        <div class="comp-header">
+          <div class="comp-name">YUYO</div>
+          <div class="comp-type">México · Competencia directa principal</div>
+        </div>
+        <div class="comp-angle">Shot hidratante + polvo — "El primer y único shot hidratante"</div>
+        <div class="comp-learns">
+          <div class="comp-learn win">Mexicano, distribución física establecida, canal B2B activo</div>
+          <div class="comp-learn watch">Su polvo tiene solo 5mg de magnesio — NAAK tiene 200mg (40x más)</div>
+          <div class="comp-learn watch">Usa sucralosa, no alulosa</div>
+          <div class="comp-learn watch">Mensajes contradictorios entre sus propios productos</div>
+          <div class="comp-learn">Sin propósito social ni historia de marca</div>
+        </div>
+      </div>
+
+      <div class="comp-card" style="border-left-color:var(--gold);">
+        <div class="comp-header">
+          <div class="comp-name">Yaoca (Canelo Álvarez)</div>
+          <div class="comp-type">México · Celebrity brand</div>
+        </div>
+        <div class="comp-angle">Producto oficial del Canelo — $350 MXN por 30 sticks</div>
+        <div class="comp-learns">
+          <div class="comp-learn watch">3 sellos negros en la caja: exceso calorías, azúcares y sodio</div>
+          <div class="comp-learn watch">2.2g de azúcar, 44kcal por porción — no es realmente "saludable"</div>
+          <div class="comp-learn watch">74mg potasio vs NAAK ~376mg — fórmula débil</div>
+          <div class="comp-learn win">El consumidor que los prueba y se decepciona es el cliente de NAAK</div>
+          <div class="comp-learn">El nombre del Canelo no salva una fórmula con 3 sellos</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══ 02 INSIGHTS ═══ -->
+  <div class="section fade d3">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div class="section-title">Insights clave del research</div>
+    </div>
+
+    <div class="insights-grid">
+      <div class="insight-card">
+        <div class="insight-icon">🧪</div>
+        <div class="insight-title">Alulosa ya está validada</div>
+        <div class="insight-text">Liquid I.V. gastó millones educando al mercado sobre alulosa como potenciador de absorción. NAAK ya la tiene. El consumidor educado va a buscar ese ingrediente en la etiqueta.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">🇲🇽</div>
+        <div class="insight-title">El terreno mexicano está libre</div>
+        <div class="insight-text">EUA tiene infinitas marcas. México tiene básicamente YUYO, Yaoca y los sueros orales. El hueco del medio — mejor fórmula que Electrolit, más mexicano que LMNT — está sin ocupar.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">📊</div>
+        <div class="insight-title">Las tablas comparativas venden</div>
+        <div class="insight-text">Nuun, IM8, YUYO — todos usan "Us Vs Them". NAAK tiene el argumento más fácil: 200mg de magnesio vs 5mg de YUYO. Un número hace el trabajo de 1,000 palabras.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">❤️</div>
+        <div class="insight-title">El propósito no es opcional</div>
+        <div class="insight-text">Liquid I.V., IM8 — las marcas que crecen tienen causa. No como página de RSE que nadie lee, sino integrada al DNA. "Por cada NAAK, hidratamos a alguien que no puede."</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">🏥</div>
+        <div class="insight-title">Los sellos son un arma</div>
+        <div class="insight-text">Yaoca tiene 3 sellos negros a $350 MXN. YUYO Sport tiene sello de exceso de sodio. NAAK Daily no tiene ninguno. Para embarazadas y consumidores conscientes eso es definitivo.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">☀️</div>
+        <div class="insight-title">El calor mexicano es el contexto</div>
+        <div class="insight-text">YUYO lo encontró primero: +1,000% de muertes por golpe de calor en 2023, 18 estados con 40-45°C. Ese es el contexto de NAAK. No "hidrátate" genérico — "este calor es serio."</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══ 03 HEADLINES ═══ -->
+  <div class="section fade d3">
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <div class="section-title">Headlines seleccionados</div>
+    </div>
+
+    <div class="headlines-grid">
+      <div class="headline-card star">
+        <div class="headline-tag">Principal</div>
+        <div class="headline-text">"Hecho en México para el México que suda."</div>
+      </div>
+      <div class="headline-card star">
+        <div class="headline-tag">Propósito</div>
+        <div class="headline-text">"Cada NAAK que tomas, hidrata a un niño que da todo en la cancha."</div>
+      </div>
+      <div class="headline-card">
+        <div class="headline-tag">vs YUYO</div>
+        <div class="headline-text">"YUYO tiene 5mg de magnesio. NAAK tiene 200mg."</div>
+      </div>
+      <div class="headline-card">
+        <div class="headline-tag">Mamá</div>
+        <div class="headline-text">"El único electrolito que puedes tomar embarazada, sin preocupaciones."</div>
+      </div>
+      <div class="headline-card">
+        <div class="headline-tag">Minimalista</div>
+        <div class="headline-text">"Sin azúcar. Sin sellos. Sin igual."</div>
+      </div>
+      <div class="headline-card">
+        <div class="headline-tag">Nutrióloga</div>
+        <div class="headline-text">"El electrolito que tu nutrióloga sí te puede recomendar."</div>
+      </div>
+      <div class="headline-card">
+        <div class="headline-tag">Contexto MX</div>
+        <div class="headline-text">"La hidratación es segunda solo al oxígeno. Y México es muy caluroso."</div>
+      </div>
+      <div class="headline-card">
+        <div class="headline-tag">B2B</div>
+        <div class="headline-text">"Protege a tu equipo del calor. Sin azúcar, sin sellos, con resultados."</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══ 04 ESTRATEGIAS ═══ -->
+  <div class="section fade d4">
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <div class="section-title">Estrategias de marketing</div>
+    </div>
+
+    <div class="strategy-list">
+      <div class="strategy-item">
+        <div class="strategy-num">01</div>
+        <div class="strategy-content">
+          <div class="strategy-title">Nutriólogos como canal primario</div>
+          <div class="strategy-text">Visitar nutriólogos con muestra + hoja de fórmula + comisión. La recomendación de un profesional vale más que cualquier anuncio. Arrancar con 2 contactos ya establecidos y crecer por referidos — los nutriólogos se conocen entre ellos. Ofrecer 3 opciones: consignación, mayoreo, o comisión por referido digital.</div>
+          <div class="strategy-tag">Canal de arranque</div>
+        </div>
+      </div>
+      <div class="strategy-item">
+        <div class="strategy-num">02</div>
+        <div class="strategy-content">
+          <div class="strategy-title">Tabla "NAAK vs Todos"</div>
+          <div class="strategy-text">Crear tabla comparativa con YUYO, Yaoca, Electrolit. El argumento del magnesio (200mg vs 5mg) no necesita explicación — el número habla solo. Incluir en web, en kit para nutriólogos y en redes sociales. Formato inspirado en Nuun "Us Vs Them".</div>
+          <div class="strategy-tag">Contenido web y redes</div>
+        </div>
+      </div>
+      <div class="strategy-item">
+        <div class="strategy-num">03</div>
+        <div class="strategy-content">
+          <div class="strategy-title">Contenido de ocasiones</div>
+          <div class="strategy-title"></div>
+          <div class="strategy-text">Inspirado en Liquid I.V. — contenido por momentos de uso: calor, cruda, deporte, embarazo, diario. Cada ocasión es una pieza de contenido diferente para redes. El producto es el mismo, el contexto cambia. Aumenta el universo de consumidores que se identifican.</div>
+          <div class="strategy-tag">Redes sociales</div>
+        </div>
+      </div>
+      <div class="strategy-item">
+        <div class="strategy-num">04</div>
+        <div class="strategy-content">
+          <div class="strategy-title">Canal B2B — empresas y campo</div>
+          <div class="strategy-text">Empresas con trabajadores expuestos al calor: construcción, manufactura, campo. YUYO ya abrió ese mercado con su sección empresarial. NAAK puede entrar con mejor fórmula y sin sellos. Bolsa de 30 porciones por trabajador al mes = ticket recurrente y predecible.</div>
+          <div class="strategy-tag">Canal secundario</div>
+        </div>
+      </div>
+      <div class="strategy-item">
+        <div class="strategy-num">05</div>
+        <div class="strategy-content">
+          <div class="strategy-title">Landing page + preventa</div>
+          <div class="strategy-text">Mientras llegan las materias primas, lanzar landing page "próximamente" para capturar emails. Opcionalmente hacer preventa limitada a precio especial — valida demanda real antes de tener el primer lote. Cuando se lanza, ya hay una lista de espera.</div>
+          <div class="strategy-tag">Digital · Antes del lanzamiento</div>
+        </div>
+      </div>
+      <div class="strategy-item">
+        <div class="strategy-num">06</div>
+        <div class="strategy-content">
+          <div class="strategy-title">MercadoLibre y Amazon México</div>
+          <div class="strategy-text">Antes de farmacias, entrar a marketplaces. Sin costo de entrada alto, llega a todo México, y el algoritmo da visibilidad orgánica si las reseñas son buenas. Escalar a farmacias cuando ya hay tracción y volumen probado.</div>
+          <div class="strategy-tag">E-commerce</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══ 05 PLAN DONACIÓN ═══ -->
+  <div class="section fade d5">
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <div class="section-title">Plan de impacto social · COMUDE Zapopan</div>
+    </div>
+
+    <div class="donation-hero">
+      <div class="donation-hero-label">Propósito de marca</div>
+      <div class="donation-hero-title">"Cada NAAK que tomas,<br>hidrata a un niño que da<br>todo en la cancha."</div>
+      <div class="donation-hero-text">Los equipos infantiles en unidades deportivas públicas de Zapopan entrenan bajo el sol sin acceso a electrolitos. No necesitan caridad — necesitan las mismas herramientas que tienen los niños con recursos. NAAK puede ser esa herramienta.</div>
+    </div>
+
+    <div class="donation-steps">
+      <div class="donation-step">
+        <div class="step-timing">Ahora</div>
+        <div class="step-content">
+          <div class="step-title">No hacer nada todavía</div>
+          <div class="step-text">No comunicar el plan de donación hasta tener producto físico en mano. No prometer lo que no se puede ejecutar aún. La autenticidad es el activo más valioso.</div>
+          <div class="step-detail">Regla: comunicar solo lo que ya está sucediendo</div>
+        </div>
+      </div>
+      <div class="donation-step">
+        <div class="step-timing">2 meses</div>
+        <div class="step-content">
+          <div class="step-title">Primer lote listo → Llamar al COMUDE</div>
+          <div class="step-text">Con producto en mano, llamar al COMUDE Zapopan al 33 3055 0850. Preguntar por coordinación para donar electrolitos a equipos infantiles. Un visto bueno del COMUDE abre acceso a las 20+ unidades deportivas de Zapopan simultáneamente.</div>
+          <div class="step-detail">Tel: 33 3055 0850 · Lunes a viernes 9am–5pm</div>
+        </div>
+      </div>
+      <div class="donation-step">
+        <div class="step-timing">Primer sábado</div>
+        <div class="step-content">
+          <div class="step-title">Unidad Deportiva República — 8am</div>
+          <div class="step-text">Llegar con caja de NAAK y teléfono. Buscar coach de equipo infantil. Ofrecer muestras directamente. Si no hay coordinación previa con COMUDE, se puede hacer igual — es una donación, no una venta. Nadie dice que no.</div>
+          <div class="step-detail">Av. Emilio Carranza S/N, República, Zapopan · Abre 7am todos los días</div>
+        </div>
+      </div>
+      <div class="donation-step">
+        <div class="step-timing">Lanzamiento</div>
+        <div class="step-content">
+          <div class="step-title">Publicar cuando ya esté hecho</div>
+          <div class="step-text">El día del lanzamiento de NAAK: producto disponible + primera donación ya ejecutada + video real en la cancha. Todo junto el mismo día. Ese es el contenido de marca más poderoso que existe — auténtico, mexicano, con niños reales.</div>
+          <div class="step-detail">30 segundos filmados con iPhone valen más que una campaña producida</div>
+        </div>
+      </div>
+      <div class="donation-step">
+        <div class="step-timing">Mensual</div>
+        <div class="step-content">
+          <div class="step-title">Routine de donación mensual</div>
+          <div class="step-text">Una visita por mes a distintas unidades deportivas. Diferente cancha, diferente colonia, diferente equipo — misma misión. El contenido nunca se acaba y siempre es real. 12 entregas al año = 12 piezas de contenido auténtico.</div>
+          <div class="step-detail">Tabachines · Las Bóvedas · El Polvorín · República — rotación mensual</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-box">
+      <div class="contact-label">Datos de contacto COMUDE Zapopan</div>
+      <div class="contact-title">Consejo Municipal del Deporte de Zapopan</div>
+      <div class="contact-items">
+        <div class="contact-item">
+          <span class="contact-key">Teléfono</span>
+          <span class="contact-val">33 3055 0850</span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-key">Horario</span>
+          <span class="contact-val">Lunes a viernes · 9:00am – 5:00pm</span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-key">Oficinas</span>
+          <span class="contact-val">Unidad Deportiva Tabachines · Edificio Administrativo 3er nivel</span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-key">Correo</span>
+          <span class="contact-val">transparencia.comude@zapopan.gob.mx</span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-key">Cuándo llamar</span>
+          <span class="contact-val">Cuando el primer lote de producto esté listo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ NEXT STEPS ═══ -->
+  <div class="nextsteps fade d5" style="margin-top:72px;">
+    <div class="nextsteps-label">// Lo que sigue</div>
+    <div class="nextsteps-title">Checklist de lanzamiento</div>
+    <div class="steps-list">
+      <div class="next-item">
+        <div class="next-check"></div>
+        <div class="next-text"><strong>Lunes próximo</strong> — Visitar nutriólogo. Mostrar fórmula y diseño de empaque de manera informal.</div>
+      </div>
+      <div class="next-item">
+        <div class="next-check"></div>
+        <div class="next-text"><strong>Esta semana</strong> — Hablar con la nutrióloga que recomendó la alulosa. Integrarla formalmente al proyecto.</div>
+      </div>
+      <div class="next-item">
+        <div class="next-check"></div>
+        <div class="next-text"><strong>2 meses</strong> — Materias primas llegan. Producir primer lote. Iniciar trámite COFEPRIS con el papá.</div>
+      </div>
+      <div class="next-item">
+        <div class="next-check"></div>
+        <div class="next-text"><strong>Antes del lanzamiento</strong> — Llamar al COMUDE Zapopan (33 3055 0850) para coordinar donación a equipos infantiles.</div>
+      </div>
+      <div class="next-item">
+        <div class="next-check"></div>
+        <div class="next-text"><strong>Lanzamiento</strong> — Web activa + primer lote disponible + primera donación en cancha documentada en video.</div>
+      </div>
+      <div class="next-item">
+        <div class="next-check"></div>
+        <div class="next-text"><strong>Post-lanzamiento</strong> — Visitas a nutriólogos y gyms. MercadoLibre. Canal B2B. Donación mensual rutinaria.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

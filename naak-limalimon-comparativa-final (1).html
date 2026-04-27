@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAAK — Daily vs Sport</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#EDE8DC; font-family:'DM Sans',sans-serif; color:#0B1F3A; min-height:100vh; }
+body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23n)' opacity='0.018'/%3E%3C/svg%3E"); pointer-events:none; z-index:999; }
+
+header { padding:44px 60px 40px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(11,31,58,0.1); }
+.h-brand { font-family:'Syne',sans-serif; font-size:28px; font-weight:800; letter-spacing:8px; color:#0B1F3A; }
+.h-meta  { font-family:'DM Mono',monospace; font-size:10px; color:#7A8A9A; letter-spacing:2px; text-align:right; line-height:2; }
+
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:2px; }
+
+.panel { padding:52px; display:flex; flex-direction:column; gap:36px; }
+.panel-d { background:#F5F0E6; }
+.panel-s { background:#0B1F3A; }
+
+/* badge */
+.badge { display:inline-flex; align-items:center; gap:10px; }
+.bdot  { width:8px; height:8px; border-radius:50%; background:#E8C000; }
+.blbl  { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:4px; text-transform:uppercase; }
+.panel-d .blbl { color:rgba(10,10,10,0.35); }
+.panel-s .blbl { color:rgba(232,192,0,0.55); }
+
+.ptitle { font-family:'Syne',sans-serif; font-size:clamp(32px,3.5vw,48px); font-weight:800; line-height:1; letter-spacing:-1px; margin-top:8px; }
+.panel-d .ptitle { color:#0B1F3A; }
+.panel-s .ptitle { color:#F5F0E6; }
+
+.psub { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; margin-top:6px; }
+.panel-d .psub { color:#7A8A9A; }
+.panel-s .psub { color:rgba(255,255,255,0.25); }
+
+/* mockup */
+.mockup { display:flex; justify-content:center; }
+
+/* ── DAILY BAG ── */
+.bag-d { width:196px; height:272px; position:relative; cursor:pointer; transition:transform 0.45s cubic-bezier(0.23,1,0.32,1); }
+.bag-d:hover { transform:translateY(-10px) rotate(-0.6deg); }
+.bd { width:100%; height:100%; background:#E8C000; border-radius:10px 10px 16px 16px; position:relative; overflow:hidden; box-shadow:-4px 5px 0 rgba(14,12,10,0.07),0 28px 50px rgba(180,150,0,0.22); }
+.bd-zip { height:16px; background:rgba(255,255,255,0.95); border-radius:10px 10px 0 0; display:flex; align-items:center; justify-content:center; }
+.bd-zip span, .bs-zip span, .bd-sci span, .bs-sci span { font-family:'DM Mono',monospace; font-size:5px; letter-spacing:3px; text-transform:uppercase; }
+.bd-zip span { color:rgba(14,12,10,0.4); }
+.bd-sci { height:18px; background:rgba(255,255,255,0.92); display:flex; align-items:center; justify-content:center; }
+.bd-sci span { color:rgba(14,12,10,0.55); }
+.bd-fl { position:absolute;top:0;left:0;bottom:0;width:14px;background:linear-gradient(to right,rgba(255,255,255,0.12),transparent);pointer-events:none; }
+.bd-fr { position:absolute;top:0;right:0;bottom:0;width:10px;background:linear-gradient(to left,rgba(0,0,0,0.05),transparent);pointer-events:none; }
+.bd-main { position:absolute; top:34px; left:12px; right:12px; bottom:30px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:10px 0 6px; }
+.bd-brand { font-family:'Syne',sans-serif; font-size:42px; font-weight:600; letter-spacing:6px; color:rgba(14,12,10,0.92); text-align:center; }
+.bd-el { font-family:'Syne',sans-serif; font-size:12px; font-weight:700; letter-spacing:5px; text-transform:uppercase; color:rgba(14,12,10,0.82); text-align:center; }
+.bd-sb { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:3px; text-transform:uppercase; color:rgba(14,12,10,0.4); text-align:center; margin-top:1px; }
+.bd-mom { width:100%; display:flex; justify-content:space-around; align-items:center; padding:5px 0; border-top:1px solid rgba(14,12,10,0.1); border-bottom:1px solid rgba(14,12,10,0.1); }
+.bd-m { display:flex; flex-direction:column; align-items:center; gap:2px; opacity:0.45; }
+.bd-m svg { width:11px; height:11px; fill:none; stroke:rgba(14,12,10,0.8); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.bd-m span { font-family:'DM Mono',monospace; font-size:4px; letter-spacing:1px; text-transform:uppercase; color:rgba(14,12,10,0.5); }
+.bd-hecho { width:100%; display:flex; align-items:center; gap:5px; }
+.bd-hl { flex:1; height:1px; background:rgba(200,144,42,0.2); }
+.bd-ht { font-family:'DM Mono',monospace; font-size:4.5px; letter-spacing:3px; text-transform:uppercase; color:rgba(200,144,42,0.5); }
+.bd-bot { position:absolute; bottom:0; left:0; right:0; height:28px; background:rgba(255,255,255,0.92); border-radius:0 0 16px 16px; display:flex; align-items:center; justify-content:space-between; padding:0 14px; }
+.bd-bot .l { font-family:'Syne',sans-serif; font-size:11px; font-weight:700; color:rgba(14,12,10,0.85); letter-spacing:1px; }
+.bd-bot .r { font-family:'DM Mono',monospace; font-size:7px; color:rgba(14,12,10,0.35); }
+
+/* ── SPORT BAG ── */
+.bag-s { width:196px; height:272px; position:relative; cursor:pointer; transition:transform 0.45s cubic-bezier(0.23,1,0.32,1); }
+.bag-s:hover { transform:translateY(-10px) rotate(-0.6deg); }
+.bs { width:100%; height:100%; background:#0A0A0A; border-radius:10px 10px 16px 16px; position:relative; overflow:hidden; box-shadow:-4px 5px 0 rgba(0,0,0,0.2),0 28px 50px rgba(0,0,0,0.45),0 0 0 1px rgba(232,192,0,0.1); }
+.bs-zip { height:16px; background:#E8C000; border-radius:10px 10px 0 0; display:flex; align-items:center; justify-content:center; }
+.bs-zip span { color:rgba(14,12,10,0.55); }
+.bs-sci { height:18px; background:#E8C000; display:flex; align-items:center; justify-content:center; }
+.bs-sci span { color:rgba(14,12,10,0.7); }
+.bs-fl { position:absolute;top:0;left:0;bottom:0;width:14px;background:linear-gradient(to right,rgba(255,255,255,0.04),transparent);pointer-events:none; }
+.bs-fr { position:absolute;top:0;right:0;bottom:0;width:10px;background:linear-gradient(to left,rgba(0,0,0,0.2),transparent);pointer-events:none; }
+.bs-main { position:absolute; top:34px; left:12px; right:12px; bottom:30px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:10px 0 6px; }
+.bs-brand { font-family:'Syne',sans-serif; font-size:42px; font-weight:600; letter-spacing:6px; color:#E8C000; text-align:center; }
+.bs-el { font-family:'Syne',sans-serif; font-size:12px; font-weight:700; letter-spacing:5px; text-transform:uppercase; color:rgba(255,255,255,0.85); text-align:center; }
+.bs-sb { font-family:'DM Mono',monospace; font-size:7px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.3); text-align:center; margin-top:1px; }
+.bs-mom { width:100%; display:flex; justify-content:space-around; align-items:center; padding:5px 0; border-top:1px solid rgba(232,192,0,0.12); border-bottom:1px solid rgba(232,192,0,0.12); }
+.bs-m { display:flex; flex-direction:column; align-items:center; gap:2px; opacity:0.5; }
+.bs-m svg { width:11px; height:11px; fill:none; stroke:rgba(255,255,255,0.85); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.bs-m span { font-family:'DM Mono',monospace; font-size:4px; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,0.45); }
+.bs-hecho { width:100%; display:flex; align-items:center; gap:5px; }
+.bs-hl { flex:1; height:1px; background:rgba(232,192,0,0.15); }
+.bs-ht { font-family:'DM Mono',monospace; font-size:4.5px; letter-spacing:3px; text-transform:uppercase; color:rgba(232,192,0,0.4); }
+.bs-bot { position:absolute; bottom:0; left:0; right:0; height:28px; background:#E8C000; border-radius:0 0 16px 16px; display:flex; align-items:center; justify-content:space-between; padding:0 14px; }
+.bs-bot .l { font-family:'Syne',sans-serif; font-size:11px; font-weight:700; color:rgba(14,12,10,0.88); letter-spacing:1px; }
+.bs-bot .r { font-family:'DM Mono',monospace; font-size:7px; color:rgba(14,12,10,0.45); }
+
+/* specs */
+.specs { display:flex; flex-direction:column; gap:9px; }
+.sttl { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:4px; text-transform:uppercase; padding-bottom:9px; }
+.panel-d .sttl { color:#7A8A9A; border-bottom:1px solid rgba(10,10,10,0.1); }
+.panel-s .sttl { color:rgba(255,255,255,0.25); border-bottom:1px solid rgba(255,255,255,0.07); }
+.sr { display:flex; justify-content:space-between; font-size:13px; }
+.panel-d .sr .sl { color:rgba(10,10,10,0.4); font-weight:300; }
+.panel-d .sr .sv { font-family:'DM Mono',monospace; font-size:12px; color:#0B1F3A; font-weight:500; }
+.panel-s .sr .sl { color:rgba(255,255,255,0.3); font-weight:300; }
+.panel-s .sr .sv { font-family:'DM Mono',monospace; font-size:12px; color:#E8C000; font-weight:500; }
+
+/* diff */
+.diff { padding:18px 22px; border-radius:3px; }
+.panel-d .diff { background:rgba(10,10,10,0.04); border-left:3px solid #C8902A; }
+.panel-s .diff { background:rgba(232,192,0,0.06); border-left:3px solid #E8C000; }
+.dlbl { font-family:'DM Mono',monospace; font-size:8px; letter-spacing:3px; text-transform:uppercase; margin-bottom:8px; }
+.panel-d .dlbl { color:#C8902A; }
+.panel-s .dlbl { color:rgba(232,192,0,0.7); }
+.dtxt { font-size:13px; font-weight:300; line-height:1.7; }
+.panel-d .dtxt { color:rgba(10,10,10,0.55); }
+.panel-s .dtxt { color:rgba(255,255,255,0.45); }
+
+/* bottom */
+.bottom { background:#0B1F3A; padding:60px 56px; display:flex; flex-direction:column; align-items:center; gap:36px; }
+.bttl { font-family:'Syne',sans-serif; font-size:12px; font-weight:700; letter-spacing:6px; text-transform:uppercase; color:rgba(255,255,255,0.18); }
+.sodium-row { display:flex; gap:56px; align-items:center; justify-content:center; flex-wrap:wrap; }
+.sodium-item { display:flex; flex-direction:column; align-items:center; gap:8px; }
+.snum { font-family:'Syne',sans-serif; font-size:64px; font-weight:800; line-height:1; color:#E8C000; }
+.slbl { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.3); }
+.sver { font-size:11px; font-weight:300; color:rgba(255,255,255,0.18); letter-spacing:2px; text-transform:uppercase; }
+.sdiv { width:1px; height:80px; background:rgba(255,255,255,0.07); }
+.bnote { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:rgba(255,255,255,0.18); text-align:center; max-width:480px; line-height:2; }
+
+@keyframes up { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.panel { animation:up 0.65s cubic-bezier(0.23,1,0.32,1) both; }
+.panel-d { animation-delay:.05s; }
+.panel-s { animation-delay:.12s; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-brand">NAAK</div>
+  <div class="h-meta">Lima Limón · Daily + Sport<br>12 porciones · 72g · 2026</div>
+</header>
+
+<div class="grid">
+
+  <!-- DAILY -->
+  <div class="panel panel-d">
+    <div>
+      <div class="badge"><div class="bdot"></div><span class="blbl">Línea Daily</span></div>
+      <div class="ptitle">Uso<br>Diario</div>
+      <div class="psub">Hidratación natural · Todo el día</div>
+    </div>
+
+    <div class="mockup" style="gap:20px;align-items:flex-end;">
+      <!-- stick daily: blanco + bandas amarillas -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+        <div style="width:58px;height:192px;border-radius:4px;position:relative;overflow:hidden;background:#FDFAF5;box-shadow:0 0 0 1px rgba(14,12,10,0.08),0 16px 36px rgba(14,12,10,0.14);cursor:pointer;transition:transform 0.45s cubic-bezier(0.23,1,0.32,1);" onmouseenter="this.style.transform='translateY(-12px) rotate(-1.8deg)'" onmouseleave="this.style.transform=''">
+          <!-- top band yellow -->
+          <div style="position:absolute;top:0;left:0;right:0;height:26px;background:#E8C000;display:flex;align-items:center;justify-content:center;gap:4px;">
+            <span style="font-family:'DM Mono',monospace;font-size:5.5px;letter-spacing:1.5px;color:rgba(14,12,10,0.7);text-transform:uppercase;">Na</span>
+            <span style="width:2px;height:2px;border-radius:50%;background:rgba(14,12,10,0.25);display:inline-block;"></span>
+            <span style="font-family:'DM Mono',monospace;font-size:5.5px;letter-spacing:1.5px;color:rgba(14,12,10,0.7);text-transform:uppercase;">K</span>
+            <span style="width:2px;height:2px;border-radius:50%;background:rgba(14,12,10,0.25);display:inline-block;"></span>
+            <span style="font-family:'DM Mono',monospace;font-size:5.5px;letter-spacing:1.5px;color:rgba(14,12,10,0.7);text-transform:uppercase;">Mg</span>
+          </div>
+          <!-- inner content -->
+          <div style="position:absolute;top:26px;left:0;right:0;bottom:20px;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;padding:8px 8px;">
+            <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:600;letter-spacing:4px;color:#0A0A0A;text-align:center;">NAAK</div>
+            <div style="width:100%;">
+              <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(14,12,10,0.08);"><span style="font-family:'DM Mono',monospace;font-size:5px;color:rgba(14,12,10,0.4);">Sodio</span><span style="font-family:'DM Mono',monospace;font-size:5px;color:#0A0A0A;font-weight:600;">~200mg</span></div>
+              <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(14,12,10,0.08);"><span style="font-family:'DM Mono',monospace;font-size:5px;color:rgba(14,12,10,0.4);">Potasio</span><span style="font-family:'DM Mono',monospace;font-size:5px;color:#0A0A0A;font-weight:600;">~376mg</span></div>
+              <div style="display:flex;justify-content:space-between;padding:2px 0;"><span style="font-family:'DM Mono',monospace;font-size:5px;color:rgba(14,12,10,0.4);">Magnesio</span><span style="font-family:'DM Mono',monospace;font-size:5px;color:#0A0A0A;font-weight:600;">~200mg</span></div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-family:'Syne',sans-serif;font-size:7px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#0A0A0A;">Lima Limón</div>
+              <div style="width:16px;height:2px;background:#E8C000;border-radius:1px;margin:3px auto 0;"></div>
+            </div>
+          </div>
+          <!-- bottom band yellow -->
+          <div style="position:absolute;bottom:0;left:0;right:0;height:20px;background:#E8C000;display:flex;align-items:center;justify-content:center;gap:4px;">
+            <span style="font-family:'DM Mono',monospace;font-size:5px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(14,12,10,0.7);">Sin azúcar</span>
+            <span style="width:2px;height:2px;border-radius:50%;background:rgba(14,12,10,0.3);display:inline-block;"></span>
+            <span style="font-family:'DM Mono',monospace;font-size:5px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(14,12,10,0.7);">Alulosa</span>
+          </div>
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:2px;text-transform:uppercase;color:rgba(10,10,10,0.3);">Stick</div>
+      </div>
+
+      <div class="bag-d">
+        <div class="bd">
+          <div class="bd-zip"><span>zipper resellable</span></div>
+          <div class="bd-sci"><span>Na · K · Mg · Ca · Alulosa</span></div>
+          <div class="bd-fl"></div><div class="bd-fr"></div>
+          <div class="bd-main">
+            <div class="bd-brand">NAAK</div>
+            <div><div class="bd-el">Electrolitos</div><div class="bd-sb">Lima Limón</div></div>
+            <div class="bd-mom">
+              <div class="bd-m"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg><span>Diario</span></div>
+              <div class="bd-m"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg><span>Deporte</span></div>
+              <div class="bd-m"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 00-7 7c0 2.5 1.5 4.5 3 6l1 7h6l1-7c1.5-1.5 3-3.5 3-6a7 7 0 00-7-7z"/><line x1="9" y1="17" x2="15" y2="17"/></svg><span>Cruda</span></div>
+              <div class="bd-m"><svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg><span>Calor</span></div>
+            </div>
+            <div class="bd-hecho"><div class="bd-hl"></div><span class="bd-ht">Hecho en México</span><div class="bd-hl"></div></div>
+          </div>
+          <div class="bd-bot"><span class="l">12 porciones</span><span class="r">72g</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="specs">
+      <div class="sttl">Fórmula</div>
+      <div class="sr"><span class="sl">Sodio</span><span class="sv">~200 mg</span></div>
+      <div class="sr"><span class="sl">Potasio</span><span class="sv">~376 mg</span></div>
+      <div class="sr"><span class="sl">Magnesio</span><span class="sv">~200 mg</span></div>
+      <div class="sr"><span class="sl">Alulosa</span><span class="sv">0.90 g</span></div>
+      <div class="sr"><span class="sl">Vitamina C</span><span class="sv">60 mg</span></div>
+      <div class="sr"><span class="sl">B3/B5/B6/B12</span><span class="sv">✓</span></div>
+      <div class="sr"><span class="sl">Azúcares</span><span class="sv">0 g</span></div>
+    </div>
+
+    <div class="diff">
+      <div class="dlbl">¿Para quién?</div>
+      <div class="dtxt">Uso diario, hidratación general, cruda, calor. Sin sello de exceso de sodio. Formulado por nutrióloga. Apto embarazo.</div>
+    </div>
+  </div>
+
+  <!-- SPORT -->
+  <div class="panel panel-s">
+    <div>
+      <div class="badge"><div class="bdot"></div><span class="blbl">Línea Sport</span></div>
+      <div class="ptitle">Alto<br>Rendimiento</div>
+      <div class="psub">Electrolitos intensos · Deporte extremo</div>
+    </div>
+
+    <div class="mockup" style="gap:20px;align-items:flex-end;">
+      <!-- stick sport: negro + bandas amarillas -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+        <div style="width:58px;height:192px;border-radius:4px;position:relative;overflow:hidden;background:#0A0A0A;box-shadow:0 0 0 1px rgba(232,192,0,0.15),0 16px 36px rgba(0,0,0,0.4);cursor:pointer;transition:transform 0.45s cubic-bezier(0.23,1,0.32,1);" onmouseenter="this.style.transform='translateY(-12px) rotate(-1.8deg)'" onmouseleave="this.style.transform=''">
+          <!-- top band yellow -->
+          <div style="position:absolute;top:0;left:0;right:0;height:26px;background:#E8C000;display:flex;align-items:center;justify-content:center;gap:4px;">
+            <span style="font-family:'DM Mono',monospace;font-size:5.5px;letter-spacing:1.5px;color:rgba(14,12,10,0.7);text-transform:uppercase;">Na</span>
+            <span style="width:2px;height:2px;border-radius:50%;background:rgba(14,12,10,0.3);display:inline-block;"></span>
+            <span style="font-family:'DM Mono',monospace;font-size:5.5px;letter-spacing:1.5px;color:rgba(14,12,10,0.7);text-transform:uppercase;">K</span>
+            <span style="width:2px;height:2px;border-radius:50%;background:rgba(14,12,10,0.3);display:inline-block;"></span>
+            <span style="font-family:'DM Mono',monospace;font-size:5.5px;letter-spacing:1.5px;color:rgba(14,12,10,0.7);text-transform:uppercase;">Mg</span>
+          </div>
+          <!-- inner content -->
+          <div style="position:absolute;top:26px;left:0;right:0;bottom:20px;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;padding:8px 8px;">
+            <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:600;letter-spacing:4px;color:#E8C000;text-align:center;">NAAK</div>
+            <div style="width:100%;">
+              <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(232,192,0,0.12);"><span style="font-family:'DM Mono',monospace;font-size:5px;color:rgba(255,255,255,0.3);">Sodio</span><span style="font-family:'DM Mono',monospace;font-size:5px;color:#E8C000;font-weight:600;">~500mg</span></div>
+              <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(232,192,0,0.12);"><span style="font-family:'DM Mono',monospace;font-size:5px;color:rgba(255,255,255,0.3);">Potasio</span><span style="font-family:'DM Mono',monospace;font-size:5px;color:#E8C000;font-weight:600;">~376mg</span></div>
+              <div style="display:flex;justify-content:space-between;padding:2px 0;"><span style="font-family:'DM Mono',monospace;font-size:5px;color:rgba(255,255,255,0.3);">Magnesio</span><span style="font-family:'DM Mono',monospace;font-size:5px;color:#E8C000;font-weight:600;">~200mg</span></div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-family:'Syne',sans-serif;font-size:7px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.75);">Lima · Sport</div>
+              <div style="width:16px;height:2px;background:#E8C000;border-radius:1px;margin:3px auto 0;"></div>
+            </div>
+          </div>
+          <!-- bottom band yellow -->
+          <div style="position:absolute;bottom:0;left:0;right:0;height:20px;background:#E8C000;display:flex;align-items:center;justify-content:center;gap:4px;">
+            <span style="font-family:'DM Mono',monospace;font-size:5px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(14,12,10,0.7);">Sin azúcar</span>
+            <span style="width:2px;height:2px;border-radius:50%;background:rgba(14,12,10,0.3);display:inline-block;"></span>
+            <span style="font-family:'DM Mono',monospace;font-size:5px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(14,12,10,0.7);">Alulosa</span>
+          </div>
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.2);">Stick</div>
+      </div>
+
+      <div class="bag-s">
+        <div class="bs">
+          <div class="bs-zip"><span>zipper resellable</span></div>
+          <div class="bs-sci"><span>Na · K · Mg · Ca · Alulosa</span></div>
+          <div class="bs-fl"></div><div class="bs-fr"></div>
+          <div class="bs-main">
+            <div class="bs-brand">NAAK</div>
+            <div><div class="bs-el">Electrolitos</div><div class="bs-sb">Lima Limón · Sport</div></div>
+            <div class="bs-mom">
+              <div class="bs-m"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg><span>Deporte</span></div>
+              <div class="bs-m"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg><span>Entreno</span></div>
+              <div class="bs-m"><svg viewBox="0 0 24 24"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg><span>Calor</span></div>
+              <div class="bs-m"><svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg><span>Recupera</span></div>
+            </div>
+            <div class="bs-hecho"><div class="bs-hl"></div><span class="bs-ht">Hecho en México</span><div class="bs-hl"></div></div>
+          </div>
+          <div class="bs-bot"><span class="l">12 porciones</span><span class="r">72g</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="specs">
+      <div class="sttl">Fórmula</div>
+      <div class="sr"><span class="sl">Sodio</span><span class="sv">~500 mg</span></div>
+      <div class="sr"><span class="sl">Potasio</span><span class="sv">~376 mg</span></div>
+      <div class="sr"><span class="sl">Magnesio</span><span class="sv">~200 mg</span></div>
+      <div class="sr"><span class="sl">Alulosa</span><span class="sv">0.90 g</span></div>
+      <div class="sr"><span class="sl">Vitamina C</span><span class="sv">60 mg</span></div>
+      <div class="sr"><span class="sl">B3/B5/B6/B12</span><span class="sv">✓</span></div>
+      <div class="sr"><span class="sl">Azúcares</span><span class="sv">0 g</span></div>
+    </div>
+
+    <div class="diff">
+      <div class="dlbl">¿Para quién?</div>
+      <div class="dtxt">Atletas, deportistas de alto rendimiento, calor extremo, entrenamientos largos. Mayor sodio para reponer pérdidas intensas por sudor.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM -->
+<div class="bottom">
+  <div class="bttl">La diferencia clave</div>
+  <div class="sodium-row">
+    <div class="sodium-item"><div class="snum">200</div><div class="slbl">mg Sodio</div><div class="sver">Daily</div></div>
+    <div class="sdiv"></div>
+    <div class="sodium-item"><div class="snum">500</div><div class="slbl">mg Sodio</div><div class="sver">Sport</div></div>
+  </div>
+  <div class="bnote">Daily: sin sello de exceso de sodio · formulado para uso diario y embarazo<br>Sport: sodio elevado para pérdidas intensas por sudor</div>
+</div>
+
+</body>
+</html>
